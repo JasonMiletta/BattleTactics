@@ -5,6 +5,7 @@ using UnityEngine;
 public class GridTile : MonoBehaviour {
 
     public GameObject[] tilePrefabs;
+    public Unit testUnitCreate;
 
     private GameObject tile;
 
@@ -18,5 +19,18 @@ public class GridTile : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         tile.transform.localScale = Vector3.Lerp(tile.transform.localScale, new Vector3(0.1f, 1, 0.1f), 0.25f);
+    }
+
+    public void selectTile()
+    {
+        Unit unit = GetComponentInChildren<Unit>();
+        if(unit != null)
+        {
+            unit.selectUnit();
+        } else
+        {
+            //DEBUG
+            Unit newUnit = Instantiate<Unit>(testUnitCreate, transform.position, transform.rotation, transform);
+        }
     }
 }

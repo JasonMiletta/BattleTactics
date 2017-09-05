@@ -54,6 +54,7 @@ public class WorldTileMap : MonoBehaviour {
             {
                 Vector3 spawnPosition = new Vector3(i, 0, j);
                 grid[i, j] = Instantiate(gridTile, spawnPosition, this.transform.rotation, this.transform);
+                grid[i, j].name = "GridTile " + i + " " + j;
             }
         }
     }
