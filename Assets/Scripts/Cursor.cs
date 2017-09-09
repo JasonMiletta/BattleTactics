@@ -16,35 +16,37 @@ public class Cursor : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        updateCursorPosition();
         if (Input.GetMouseButtonDown(0))
         {
             if (currentlyHasSelectedTile)
             {
-                currentlyHasSelectedTile = false;
                 if (currentlySelectedUnit)
                 {
                     currentlySelectedUnit.moveUnitToGridTile(selectedGridTile);
                 }
+                cursorDeselect();
             }
             else
             {
-                selectCurrentTile();
+                cursorSelect();
             }
         } else if (Input.GetMouseButtonDown(2))
         {
             selectedGridTile.createTestUnitOnTile();
         }
-        updateCursorPosition();
     }
 
-    private void selectCurrentTile()
+    private bool selectCurrentTile()
     {
         if (selectedGridTile.getChildUnit())
         {
-            currentlyHasSelectedTile = true;
             selectedGridTile.selectTile();
             currentlySelectedUnit = selectedGridTile.getChildUnit();
+            return true;
         }
+
+        return false;
     }
 
     private void updateCursorPosition()
@@ -57,19 +59,34 @@ public class Cursor : MonoBehaviour {
             Debug.DrawLine(mouseRayCast.origin, hit.point);
             GameObject gridObject = hit.collider.gameObject;
             selectedGridTile = gridObject.GetComponentInParent<GridTile>();
-
             transform.position = Vector3.Lerp(this.transform.position, gridObject.transform.parent.position, 0.25f);
         }
     }
 
-    private void expandCursor()
+    private void cursorSelect()
     {
-        transform.localScale.Scale(new Vector3(1.5f, 1.5f, 1.5f));
+        currentlyHasSelectedTile = selectCurrentTile();
+        Vector3 destination = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
+        StartCoroutine(smoothMovement(transform.position, destination, 0.1f));
     }
 
-    private void shrinkCursor()
+    private void cursorDeselect()
     {
-        transform.localScale.Scale(new Vector3(1f, 1f, 1f));
+        currentlyHasSelectedTile = false;
+        currentlySelectedUnit = null;
+        Vector3 destination = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
+        StartCoroutine(smoothMovement(transform.position, destination, 0.1f));
     }
 
+    private IEnumerator smoothMovement(Vector3 source, Vector3 destination, float duration)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + duration)
+        {
+            transform.position = Vector3.Lerp(source, destination, (Time.time - startTime) / duration);
+            yield return null;
+        }
+        transform.position = destination;
+        yield return null;
+    }
 }
