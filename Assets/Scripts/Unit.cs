@@ -16,14 +16,25 @@ public class Unit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+    }
 
     public void moveUnitToGridTile(GridTile tile)
     {
         transform.parent = tile.transform;
-        transform.position = tile.transform.position;
+        StartCoroutine(smoothMovementCoRoutine(transform.position, tile.transform.position, 0.05f));
         deselectUnit();
+    }
+
+    private IEnumerator smoothMovementCoRoutine(Vector3 source, Vector3 destination, float duration)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + duration)
+        {
+            transform.position = Vector3.Lerp(source, destination, (Time.time - startTime) / duration);
+            yield return null;
+        }
+        transform.position = destination;
+        yield return null;
     }
 
     public void selectUnit()
