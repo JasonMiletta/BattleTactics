@@ -5,6 +5,9 @@ using UnityEngine;
 public class Cursor : MonoBehaviour {
     public GridTile selectedGridTile;
 
+    private bool currentlyHasSelectedTile = false;
+    private Unit currentlySelectedUnit;
+
     // Use this for initialization
     void Start () {
 		
@@ -15,15 +18,33 @@ public class Cursor : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            selectCurrentTile();
+            if (currentlyHasSelectedTile)
+            {
+                currentlyHasSelectedTile = false;
+                if (currentlySelectedUnit)
+                {
+                    currentlySelectedUnit.moveUnitToGridTile(selectedGridTile);
+                }
+            }
+            else
+            {
+                selectCurrentTile();
+            }
+        } else if (Input.GetMouseButtonDown(2))
+        {
+            selectedGridTile.createTestUnitOnTile();
         }
         updateCursorPosition();
     }
 
     private void selectCurrentTile()
     {
-
-        selectedGridTile.selectTile();
+        if (selectedGridTile.getChildUnit())
+        {
+            currentlyHasSelectedTile = true;
+            selectedGridTile.selectTile();
+            currentlySelectedUnit = selectedGridTile.getChildUnit();
+        }
     }
 
     private void updateCursorPosition()
@@ -39,6 +60,16 @@ public class Cursor : MonoBehaviour {
 
             transform.position = Vector3.Lerp(this.transform.position, gridObject.transform.parent.position, 0.25f);
         }
+    }
+
+    private void expandCursor()
+    {
+        transform.localScale.Scale(new Vector3(1.5f, 1.5f, 1.5f));
+    }
+
+    private void shrinkCursor()
+    {
+        transform.localScale.Scale(new Vector3(1f, 1f, 1f));
     }
 
 }

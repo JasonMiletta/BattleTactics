@@ -27,10 +27,18 @@ public class GridTile : MonoBehaviour {
         if(unit != null)
         {
             unit.selectUnit();
-        } else
-        {
-            //DEBUG
-            Unit newUnit = Instantiate<Unit>(testUnitCreate, transform.position, transform.rotation, transform);
         }
+    }
+
+    //DEBUG
+    public void createTestUnitOnTile()
+    {
+        //DEBUG
+        Unit newUnit = Instantiate<Unit>(testUnitCreate, transform.position, transform.rotation, transform);
+    }
+
+    public Unit getChildUnit()
+    {
+        return GetComponentInChildren<Unit>();
     }
 }

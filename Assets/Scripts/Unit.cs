@@ -11,13 +11,20 @@ public class Unit : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        originalMaterial = unitModel.GetComponent<Material>();
+        originalMaterial = unitModel.GetComponent<Renderer>().material;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+    public void moveUnitToGridTile(GridTile tile)
+    {
+        transform.parent = tile.transform;
+        transform.position = tile.transform.position;
+        deselectUnit();
+    }
 
     public void selectUnit()
     {
