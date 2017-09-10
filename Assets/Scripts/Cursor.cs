@@ -1,53 +1,55 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Cursor : MonoBehaviour {
     public GridTile selectedGridTile;
+    public GridTile currentHighlightedTile;
+    public GameObject selectedCursorPrefab;
 
     private bool currentlyHasSelectedTile = false;
     private Unit currentlySelectedUnit;
 
     // Use this for initialization
     void Start () {
-		
+        selectedCursorPrefab = Instantiate(selectedCursorPrefab);
+        selectedCursorPrefab.SetActive(false);
 	}
 
     // Update is called once per frame
     void Update()
     {
         updateCursorPosition();
-        if (Input.GetMouseButtonDown(0))
+        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        if (!eventSystem.IsPointerOverGameObject())
         {
-            if (currentlyHasSelectedTile)
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (currentlyHasSelectedTile)
+                {
+                    cursorDeselect();
+                }
+                else
+                {
+                    cursorSelect();
+                }
+            }
+            else if (Input.GetMouseButtonDown(1))
             {
                 if (currentlySelectedUnit)
                 {
-                    currentlySelectedUnit.moveUnitToGridTile(selectedGridTile);
+                    currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
                 }
-                cursorDeselect();
             }
-            else
+            else if (Input.GetMouseButtonDown(2))
             {
-                cursorSelect();
+                currentHighlightedTile.createTestUnitOnTile();
             }
-        } else if (Input.GetMouseButtonDown(2))
-        {
-            selectedGridTile.createTestUnitOnTile();
         }
     }
 
-    private bool selectCurrentTile()
-    {
-        if (selectedGridTile.getChildUnit())
-        {
-            selectedGridTile.selectTile();
-            currentlySelectedUnit = selectedGridTile.getChildUnit();
-            return true;
-        }
-
-        return false;
-    }
 
     private void updateCursorPosition()
     {
@@ -58,7 +60,7 @@ public class Cursor : MonoBehaviour {
         {
             Debug.DrawLine(mouseRayCast.origin, hit.point);
             GameObject gridObject = hit.collider.gameObject;
-            selectedGridTile = gridObject.GetComponent<GridTile>();
+            currentHighlightedTile = gridObject.GetComponent<GridTile>();
             transform.position = Vector3.Lerp(transform.position, gridObject.transform.position, 0.25f);
         }
     }
@@ -66,16 +68,34 @@ public class Cursor : MonoBehaviour {
     private void cursorSelect()
     {
         currentlyHasSelectedTile = selectCurrentTile();
+
+        selectedCursorPrefab.transform.position = selectedGridTile.transform.position;
+        selectedCursorPrefab.SetActive(true);
+
         Vector3 destination = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
         StartCoroutine(smoothMovement(transform.position, destination, 0.1f));
     }
 
     private void cursorDeselect()
     {
+        selectedCursorPrefab.SetActive(false);
+        selectedGridTile.deSelectTile();
+        selectedGridTile = null;
         currentlyHasSelectedTile = false;
         currentlySelectedUnit = null;
         Vector3 destination = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
         StartCoroutine(smoothMovement(transform.position, destination, 0.1f));
+    }
+
+    private bool selectCurrentTile()
+    {
+        if (selectedGridTile == null)
+        {
+            selectedGridTile = currentHighlightedTile.selectTile();
+            currentlySelectedUnit = currentHighlightedTile.getChildUnit();
+            return true;
+        }
+        return false;
     }
 
     private IEnumerator smoothMovement(Vector3 source, Vector3 destination, float duration)

@@ -9,36 +9,54 @@ public class GridTile : MonoBehaviour {
     public GameObject ground;
 
     private bool isTileBlank = true;
+    [SerializeField]
     private GameObject tile;
+    private Material originalTileMaterial;
 
 	// Use this for initialization
-	void Start () {
-        if (!isTileBlank)
-        {
-            enableTile();
-        }
-	}
+	void Start ()
+    {
+        originalTileMaterial = tile.GetComponent<Renderer>().material;
+    }
 	
 	// Update is called once per frame
 	void Update () {
     }
 
-    public void selectTile()
+    public GridTile selectTile()
     {
+        //tile.GetComponent<Renderer>().material = Resources.Load("Selected") as Material;
         Unit unit = GetComponentInChildren<Unit>();
         if(unit != null)
         {
             unit.selectUnit();
+        }
+        return this;
+    }
+
+    public void deSelectTile()
+    {
+        tile.GetComponent<Renderer>().material = originalTileMaterial;
+        Unit unit = GetComponentInChildren<Unit>();
+        if (unit != null)
+        {
+            unit.deselectUnit();
         }
     }
 
     public void enableTile()
     {
         var randomIndex = Random.Range(0, tilePrefabs.Length);
+        Destroy(tile);
         tile = Instantiate(tilePrefabs[randomIndex], this.transform.position, this.transform.rotation, this.transform);
+        //originalTileMaterial = tile.GetComponent<Renderer>().material;
         isTileBlank = false;
         tile.transform.localScale = Vector3.zero;
-        StartCoroutine(expandInTile(0.25f));
+        StartCoroutine(expandObjToScale(tile, new Vector3(0.1f, 1, 0.1f), 0.25f));
+
+        ground.transform.localScale = Vector3.zero;
+        ground.SetActive(true);
+        StartCoroutine(expandObjToScale(ground, new Vector3(1.0f, 50.0f, 1.0f), 0.25f));
     }
 
     public void clearTile()
@@ -65,15 +83,15 @@ public class GridTile : MonoBehaviour {
         return GetComponentInChildren<Unit>();
     }
 
-    private IEnumerator expandInTile(float duration)
+    private IEnumerator expandObjToScale(GameObject obj, Vector3 targetScale, float duration)
     {
         float startTime = Time.time;
         while (Time.time < startTime + duration)
         {
-            tile.transform.localScale = Vector3.Lerp(tile.transform.localScale, new Vector3(0.1f, 1, 0.1f), duration);
+            obj.transform.localScale = Vector3.Lerp(obj.transform.localScale, targetScale, duration);
             yield return null;
         }
-        transform.localScale = new Vector3(0.1f, 1, 0.1f);
+        obj.transform.localScale = targetScale;
         yield return null;
     }
 

@@ -39,11 +39,11 @@ public class Unit : MonoBehaviour {
 
     public void selectUnit()
     {
-        unitModel.GetComponent<Renderer>().material = selectedMaterial;
+        //unitModel.GetComponent<Renderer>().material = Resources.Load("Selected") as Material;
     }
 
     public void deselectUnit()
     {
-        unitModel.GetComponent<Renderer>().material = originalMaterial;
+        //unitModel.GetComponent<Renderer>().material = originalMaterial;
     }
 }
