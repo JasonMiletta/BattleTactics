@@ -5,11 +5,10 @@ using UnityEngine;
 public class WorldTileMap : MonoBehaviour {
 
     public GameObject[,] grid;
-    public float width = 1;
-    public float height = 1;
+    public float width = 10;
+    public float height = 10;
 
     public GameObject gridTile;
-    public GameObject ground;
 
 	// Use this for initialization
 	void Start () {
@@ -18,7 +17,7 @@ public class WorldTileMap : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(1))
         {
             if(width > 0 && height > 0 && grid[0,0] != null)
             {
@@ -45,8 +44,6 @@ public class WorldTileMap : MonoBehaviour {
 
     private void createGrid()
     {
-        ground.transform.position = new Vector3(((width/2 - 0.5f)), ground.transform.position.y, (height/2 - 0.5f));
-        ground.transform.localScale = new Vector3(width, 50, height);
         grid = new GameObject[(int)width, (int)height];
         for (var i = 0; i < width; ++i)
         {
@@ -55,6 +52,12 @@ public class WorldTileMap : MonoBehaviour {
                 Vector3 spawnPosition = new Vector3(i, 0, j);
                 grid[i, j] = Instantiate(gridTile, spawnPosition, this.transform.rotation, this.transform);
                 grid[i, j].name = "GridTile " + i + " " + j;
+
+                //Create a border of blank tiles to mess with
+                if (i != 0 && i != width - 1 && j != 0 && j != height - 1)
+                {
+                   grid[i, j].GetComponent<GridTile>().enableTile();
+                }
             }
         }
     }

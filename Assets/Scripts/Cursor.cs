@@ -58,8 +58,8 @@ public class Cursor : MonoBehaviour {
         {
             Debug.DrawLine(mouseRayCast.origin, hit.point);
             GameObject gridObject = hit.collider.gameObject;
-            selectedGridTile = gridObject.GetComponentInParent<GridTile>();
-            transform.position = Vector3.Lerp(this.transform.position, gridObject.transform.parent.position, 0.25f);
+            selectedGridTile = gridObject.GetComponent<GridTile>();
+            transform.position = Vector3.Lerp(transform.position, gridObject.transform.position, 0.25f);
         }
     }
 
