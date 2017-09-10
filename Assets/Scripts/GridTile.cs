@@ -13,6 +13,8 @@ public class GridTile : MonoBehaviour {
     private GameObject tile;
     private Material originalTileMaterial;
 
+    private bool tileIsChanging = false;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -48,29 +50,19 @@ public class GridTile : MonoBehaviour {
     {
         var randomIndex = Random.Range(0, tilePrefabs.Length);
         Destroy(tile);
-        tile = Instantiate(tilePrefabs[randomIndex], this.transform.position, this.transform.rotation, this.transform);
-        //originalTileMaterial = tile.GetComponent<Renderer>().material;
-        isTileBlank = false;
-        tile.transform.localScale = Vector3.zero;
-        StartCoroutine(expandObjToScale(tile, new Vector3(0.1f, 1, 0.1f), 0.25f));
-
-        ground.transform.localScale = Vector3.zero;
-        ground.SetActive(true);
-        StartCoroutine(expandObjToScale(ground, new Vector3(1.0f, 50.0f, 1.0f), 0.25f));
-    }
-
-    public void clearTile()
-    {
-        if (ground != null)
+        tile = Instantiate(tilePrefabs[randomIndex], transform.position, transform.rotation, transform);
+        if (!tile.name.Contains("Blank"))
         {
-            ground.SetActive(false);
-        }
-        if (tile != null)
-        {
-            tile.SetActive(false);
+            isTileBlank = false;
+            tile.transform.localScale = Vector3.zero;
+            StartCoroutine(lerpObjToScale(tile, new Vector3(0.1f, 1, 0.1f), 0.25f));
+
+            ground.transform.localScale = Vector3.zero;
+            ground.SetActive(true);
+            StartCoroutine(lerpObjToScale(ground, new Vector3(1.0f, 50.0f, 1.0f), 0.25f));
         }
     }
-
+   
     //DEBUG
     public void createTestUnitOnTile()
     {
@@ -78,13 +70,58 @@ public class GridTile : MonoBehaviour {
         Unit newUnit = Instantiate<Unit>(testUnitCreate, transform.position, transform.rotation, transform);
     }
 
+    public IEnumerator setTilePrefab(string tileType)
+    {
+        //Shrink existing tiles
+        if (ground != null)
+        {
+            StartCoroutine(lerpObjToScale(ground, new Vector3(0f, 0, 0f), 0.25f));
+        }
+        if (tile != null)
+        {
+            StartCoroutine(lerpObjToScale(tile, new Vector3(0f, 0, 0f), 0.25f));
+        }
+
+        //Find new tilePrefab
+        ArrayList prefabsOfMatchingTiles = new ArrayList();
+        foreach (GameObject prefab in tilePrefabs)
+        {
+            if (prefab.name.Contains(tileType))
+            {
+                prefabsOfMatchingTiles.Add(prefab);
+            }
+        }
+        var randomIndex = Random.Range(0, prefabsOfMatchingTiles.Count);
+        GameObject tilePrefab = (GameObject)prefabsOfMatchingTiles[randomIndex];
+
+        //Wait till existing tiles finish shrinking and delete
+        while (tileIsChanging)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+        Destroy(tile);
+        tile = Instantiate(tilePrefab, transform.position, transform.rotation, transform);
+
+        isTileBlank = false;
+        tile.transform.localScale = Vector3.zero;
+        StartCoroutine(lerpObjToScale(tile, new Vector3(0.1f, 1, 0.1f), 0.25f));
+        if (!tileType.Contains("Blank"))
+        {
+            ground.transform.localScale = Vector3.zero;
+            ground.SetActive(true);
+            StartCoroutine(lerpObjToScale(ground, new Vector3(1.0f, 50.0f, 1.0f), 0.25f));
+        }
+        yield return null;
+    }
+
     public Unit getChildUnit()
     {
         return GetComponentInChildren<Unit>();
     }
 
-    private IEnumerator expandObjToScale(GameObject obj, Vector3 targetScale, float duration)
+    private IEnumerator lerpObjToScale(GameObject obj, Vector3 targetScale, float duration)
     {
+        tileIsChanging = true;
         float startTime = Time.time;
         while (Time.time < startTime + duration)
         {
@@ -92,7 +129,11 @@ public class GridTile : MonoBehaviour {
             yield return null;
         }
         obj.transform.localScale = targetScale;
+        if(targetScale == Vector3.zero)
+        {
+            obj.SetActive(false);
+        }
+        tileIsChanging = false;
         yield return null;
     }
-
 }

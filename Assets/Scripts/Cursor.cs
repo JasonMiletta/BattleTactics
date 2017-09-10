@@ -65,7 +65,7 @@ public class Cursor : MonoBehaviour {
         }
     }
 
-    private void cursorSelect()
+    public void cursorSelect()
     {
         currentlyHasSelectedTile = selectCurrentTile();
 
@@ -76,7 +76,7 @@ public class Cursor : MonoBehaviour {
         StartCoroutine(smoothMovement(transform.position, destination, 0.1f));
     }
 
-    private void cursorDeselect()
+    public void cursorDeselect()
     {
         selectedCursorPrefab.SetActive(false);
         selectedGridTile.deSelectTile();
