@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GridTile : MonoBehaviour {
 
+    public enum tileType {Blank, Tree, Grass, Boulder};
+
+    public tileType currentTileType;
     public GameObject[] tilePrefabs;
     public Unit testUnitCreate;
     public GameObject ground;
@@ -19,6 +22,10 @@ public class GridTile : MonoBehaviour {
 	void Start ()
     {
         originalTileMaterial = tile.GetComponent<Renderer>().material;
+        if(currentTileType != null)
+        {
+            setTilePrefab(currentTileType.ToString());
+        }
     }
 	
 	// Update is called once per frame

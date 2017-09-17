@@ -10,8 +10,8 @@ public class WorldTileMap : MonoBehaviour {
 
     public GameObject gridTile;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         createGrid();
 	}
 	

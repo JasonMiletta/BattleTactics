@@ -93,6 +93,7 @@ public class Cursor : MonoBehaviour {
         {
             selectedGridTile = currentHighlightedTile.selectTile();
             currentlySelectedUnit = currentHighlightedTile.getChildUnit();
+            Debug.Log(currentlySelectedUnit);
             return true;
         }
         return false;
