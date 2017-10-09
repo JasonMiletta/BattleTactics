@@ -26,6 +26,12 @@ public class WorldTileEditor : MonoBehaviour {
         cursor.cursorDeselect();
     }
 
+    public void spawnUnitOnTile()
+    {
+        cursor.selectedGridTile.createTestUnitOnTile();
+        cursor.cursorDeselect();
+    }
+
     public void saveCurrentGridToJSON()
     {
         if (worldMap != null)
@@ -42,9 +48,21 @@ public class WorldTileEditor : MonoBehaviour {
         }
     }
 
+    public void loadCurrentLevelJSONData()
+    {
+        string jsonLevelData = "";
+        //jsonLevelData = get file from asset/levelData/leveldata.json
+        FileStream jsonData = File.OpenRead(Application.dataPath + gameDataProjectFilePath);
+    
+        //Manually read through jsonData filestream and parse out into WorldTileMap
+        Debug.Log(jsonLevelData);
+        loadGridFromJSON(jsonLevelData);
+    }
+
     public void loadGridFromJSON(string json)
     {
         WorldTileMap newMap = (WorldTileMap)JsonUtility.FromJson(json, System.Type.GetType("WorldTileMap"));
+        Debug.Log(newMap);
     }
 
     private string convertWorldTileGridArrayToJSON(WorldTileMap world)
