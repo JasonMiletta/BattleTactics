@@ -27,7 +27,13 @@ public class Cursor : MonoBehaviour {
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (currentlyHasSelectedTile)
+
+                if (currentlySelectedUnit)
+                {
+                    currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
+                    cursorDeselect();
+                }
+                else if (currentlyHasSelectedTile)
                 {
                     cursorDeselect();
                 }
@@ -35,17 +41,6 @@ public class Cursor : MonoBehaviour {
                 {
                     cursorSelect();
                 }
-            }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                if (currentlySelectedUnit)
-                {
-                    currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
-                }
-            }
-            else if (Input.GetMouseButtonDown(2))
-            {
-                currentHighlightedTile.createTestUnitOnTile();
             }
         }
     }
