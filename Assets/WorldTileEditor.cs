@@ -7,7 +7,7 @@ public class WorldTileEditor : MonoBehaviour {
     public Cursor cursor;
     public WorldTileMap worldMap;
 
-    private string gameDataProjectFilePath = "/levelData/levelData.json";
+    private string gameDataProjectFilePath = "levelData/levelData.json";
 
     // Use this for initialization
     void Start () {
@@ -42,7 +42,7 @@ public class WorldTileEditor : MonoBehaviour {
 
             jsonData = convertWorldTileGridArrayToJSON(map);
             Debug.Log(jsonData);
-            string filePath = Application.dataPath + gameDataProjectFilePath;
+            string filePath = Application.dataPath + "/Resources" + gameDataProjectFilePath;
             Debug.Log(filePath);
             File.WriteAllText(filePath, jsonData);
         }
@@ -52,11 +52,13 @@ public class WorldTileEditor : MonoBehaviour {
     {
         string jsonLevelData = "";
         //jsonLevelData = get file from asset/levelData/leveldata.json
-        FileStream jsonData = File.OpenRead(Application.dataPath + gameDataProjectFilePath);
-    
-        //Manually read through jsonData filestream and parse out into WorldTileMap
-        Debug.Log(jsonLevelData);
-        loadGridFromJSON(jsonLevelData);
+        string levelFilePath = gameDataProjectFilePath.Replace(".json", "");
+        Debug.Log(levelFilePath);
+        //FileStream jsonData = File.OpenRead(Application.dataPath + gameDataProjectFilePath);
+        TextAsset targetFile = Resources.Load<TextAsset>(levelFilePath);
+
+        Debug.Log(targetFile.text);
+        loadGridFromJSON(targetFile.text);
     }
 
     public void loadGridFromJSON(string json)
