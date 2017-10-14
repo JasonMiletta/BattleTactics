@@ -62,13 +62,40 @@ public class WorldTileMap : MonoBehaviour {
         }
     }
 
-    public static WorldTileMap createGridFromJSONData(WorldTileEditor.WorldJSONWrapper jsonWrapper)
+    public WorldTileMap createGridFromJSONData(WorldTileEditor.WorldJSONWrapper jsonWrapper)
     {
-        WorldTileMap map = new WorldTileMap();
+        WorldTileMap map = this;
         //TODO Manually walk through json, reating the grid and each tile
         map.height = jsonWrapper.height;
         map.width = jsonWrapper.width;
-        
+
+        map.grid = new GameObject[(int)map.width, (int)map.height];
+        List<WorldTileEditor.TileJSONWrapper> tileWrapperList = jsonWrapper.tileList;
+
+        foreach(WorldTileEditor.TileJSONWrapper tileWrapper in tileWrapperList)
+        {
+            var x = tileWrapper.xCoor;
+            var y = tileWrapper.yCoor;
+
+            GameObject newGridTile = this.createNewGridTile(tileWrapper.tileType, x, y);
+            map.grid[x, y] = newGridTile;
+        }
         return map;
     }
+
+    public GameObject createNewGridTile(GridTile.tileType tileType, int xCoor, int yCoor)
+    {
+        Vector3 spawnPosition = new Vector3(xCoor, 0, yCoor);
+        GameObject newGridTile = Instantiate(gridTile, spawnPosition, this.transform.rotation, this.transform);
+        newGridTile.name = "GridTile " + xCoor + " " + yCoor;
+
+        //Create a border of blank tiles to mess with
+        if (xCoor != 0 && xCoor != width - 1 && yCoor != 0 && yCoor != height - 1)
+        {
+            newGridTile.GetComponent<GridTile>().enableTile();
+        }
+
+        return newGridTile;
+    }
+
 }

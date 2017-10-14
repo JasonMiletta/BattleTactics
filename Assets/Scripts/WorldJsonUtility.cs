@@ -1,39 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using System.IO;
 using System;
-using UnityEngine;
 
-public class WorldTileEditor : MonoBehaviour {
-    public Cursor cursor;
-    public WorldTileMap worldMap;
+public class WorldJsonUtility : MonoBehaviour {
+    
+    private static string gameDataProjectFilePath = "levelData/levelData.json";
 
-    private string gameDataProjectFilePath = "levelData/levelData.json";
-
-    // Use this for initialization
-    void Start() {
-        cursor = FindObjectOfType<Cursor>();
-    }
-
-    // Update is called once per frame
-    void Update() {
-
-    }
-
-    public void setSelectedTile(string tileType)
-    {
-
-        StartCoroutine(cursor.selectedGridTile.setTilePrefab(tileType));
-        cursor.cursorDeselect();
-    }
-
-    public void spawnUnitOnTile()
-    {
-        cursor.selectedGridTile.createTestUnitOnTile();
-        cursor.cursorDeselect();
-    }
-
-    public void saveCurrentGridToJSON()
+    public static void saveCurrentGridToJSON(WorldTileMap worldMap)
     {
         if (worldMap != null)
         {
@@ -49,17 +24,17 @@ public class WorldTileEditor : MonoBehaviour {
         }
     }
 
-    public void loadCurrentLevelJSONData()
+    public static void loadCurrentLevelJSONData(WorldTileMap worldMap)
     {
         string levelFilePath = gameDataProjectFilePath.Replace(".json", "");
         Debug.Log(levelFilePath);
         TextAsset targetFile = Resources.Load<TextAsset>(levelFilePath);
 
         Debug.Log(targetFile.text);
-        loadGridFromJSON(targetFile.text);
+        loadGridFromJSON(targetFile.text, worldMap);
     }
 
-    public void loadGridFromJSON(string json)
+    public static void loadGridFromJSON(string json, WorldTileMap worldMap)
     {
         WorldJSONWrapper newMapWrapper = (WorldJSONWrapper)JsonUtility.FromJson(json, System.Type.GetType("WorldTileEditor").GetNestedType("WorldJSONWrapper"));
 
@@ -71,7 +46,7 @@ public class WorldTileEditor : MonoBehaviour {
         worldMap.height = newMap.height;
     }
 
-    private string convertWorldTileGridArrayToJSON(WorldTileMap world)
+    private static string convertWorldTileGridArrayToJSON(WorldTileMap world)
     {
         WorldJSONWrapper jsonWrapper = new WorldJSONWrapper();
 
@@ -82,7 +57,7 @@ public class WorldTileEditor : MonoBehaviour {
 
         TileListJSONWrapper<TileJSONWrapper> tileList = new TileListJSONWrapper<TileJSONWrapper>();
         tileList.list = new List<TileJSONWrapper>();
-        
+
         for (var i = 0; i < width; ++i)
         {
             for (var j = 0; j < height; ++j)
@@ -92,7 +67,7 @@ public class WorldTileEditor : MonoBehaviour {
                 tileList.list.Add(tileWrapper);
             }
         }
-        
+
         jsonWrapper.width = width;
         jsonWrapper.height = height;
         jsonWrapper.tileList = tileList.list;
@@ -104,7 +79,7 @@ public class WorldTileEditor : MonoBehaviour {
     {
         public int width;
         public int height;
-        
+
         public List<TileJSONWrapper> tileList;
     }
 
@@ -127,14 +102,6 @@ public class WorldTileEditor : MonoBehaviour {
             xCoor = x;
             yCoor = y;
         }
-        
-    }
 
-    private void destroyCurrentWorld()
-    {
-        foreach (GameObject obj in worldMap.grid)
-        {
-            Destroy(obj);
-        }
     }
 }
