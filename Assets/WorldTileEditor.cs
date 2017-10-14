@@ -1,27 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using UnityEngine;
 
 public class WorldTileEditor : MonoBehaviour {
     public Cursor cursor;
     public WorldTileMap worldMap;
 
-    private string gameDataProjectFilePath = "levelData/levelData.json";
+    private string gameDataProjectFilePath = "/levelData/levelData.json";
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         cursor = FindObjectOfType<Cursor>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
+    // Update is called once per frame
+    void Update() {
+
+    }
 
     public void setSelectedTile(string tileType)
     {
-    
+
         StartCoroutine(cursor.selectedGridTile.setTilePrefab(tileType));
         cursor.cursorDeselect();
     }
@@ -50,11 +51,8 @@ public class WorldTileEditor : MonoBehaviour {
 
     public void loadCurrentLevelJSONData()
     {
-        string jsonLevelData = "";
-        //jsonLevelData = get file from asset/levelData/leveldata.json
         string levelFilePath = gameDataProjectFilePath.Replace(".json", "");
         Debug.Log(levelFilePath);
-        //FileStream jsonData = File.OpenRead(Application.dataPath + gameDataProjectFilePath);
         TextAsset targetFile = Resources.Load<TextAsset>(levelFilePath);
 
         Debug.Log(targetFile.text);
@@ -70,40 +68,48 @@ public class WorldTileEditor : MonoBehaviour {
     private string convertWorldTileGridArrayToJSON(WorldTileMap world)
     {
         WorldJSONWrapper jsonWrapper = new WorldJSONWrapper();
-        
+
         GameObject[,] gridArray = world.grid;
 
         int width = (int)world.width;
         int height = (int)world.height;
 
-        string tileJsonWrapperList = "[";
+        TileListJSONWrapper<TileJSONWrapper> tileList = new TileListJSONWrapper<TileJSONWrapper>();
+        tileList.list = new List<TileJSONWrapper>();
+        
         for (var i = 0; i < width; ++i)
         {
             for (var j = 0; j < height; ++j)
             {
                 GridTile tileComponent = gridArray[i, j].GetComponent<GridTile>();
                 TileJSONWrapper tileWrapper = new TileJSONWrapper(tileComponent.currentTileType, i, j);
-                tileJsonWrapperList += JsonUtility.ToJson(tileWrapper) + ", ";
+                tileList.list.Add(tileWrapper);
             }
         }
-        tileJsonWrapperList = tileJsonWrapperList.TrimEnd(',' , ' ');
-        tileJsonWrapperList += "]";
+        
         jsonWrapper.width = width;
         jsonWrapper.height = height;
-        jsonWrapper.tileList = tileJsonWrapperList;
-        
+        jsonWrapper.tileList = tileList.list;
         return JsonUtility.ToJson(jsonWrapper);
     }
 
-    private class WorldJSONWrapper
+    [Serializable]
+    public class WorldJSONWrapper
     {
         public int width;
         public int height;
         
-        public string tileList;
+        public List<TileJSONWrapper> tileList;
     }
 
-    private class TileJSONWrapper
+    [Serializable]
+    public class TileListJSONWrapper<TileJSONWrapper>
+    {
+        public List<TileJSONWrapper> list;
+    }
+
+    [Serializable]
+    public class TileJSONWrapper
     {
         public GridTile.tileType tileType;
         public int xCoor;
