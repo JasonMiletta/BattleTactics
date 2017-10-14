@@ -62,28 +62,26 @@ public class WorldTileMap : MonoBehaviour {
         }
     }
 
-    public WorldTileMap createGridFromJSONData(WorldTileEditor.WorldJSONWrapper jsonWrapper)
+    public void updateMapFromJsonWrapper(WorldJsonUtility.WorldJSONWrapper jsonWrapper)
     {
-        WorldTileMap map = this;
-        //TODO Manually walk through json, reating the grid and each tile
-        map.height = jsonWrapper.height;
-        map.width = jsonWrapper.width;
+        //Manually walk through json, reating the grid and each tile
+        this.height = jsonWrapper.height;
+        this.width = jsonWrapper.width;
 
-        map.grid = new GameObject[(int)map.width, (int)map.height];
-        List<WorldTileEditor.TileJSONWrapper> tileWrapperList = jsonWrapper.tileList;
+        this.grid = new GameObject[(int)this.width, (int)this.height];
+        List<WorldJsonUtility.TileJSONWrapper> tileWrapperList = jsonWrapper.tileList;
 
-        foreach(WorldTileEditor.TileJSONWrapper tileWrapper in tileWrapperList)
+        foreach(WorldJsonUtility.TileJSONWrapper tileWrapper in tileWrapperList)
         {
             var x = tileWrapper.xCoor;
             var y = tileWrapper.yCoor;
 
             GameObject newGridTile = this.createNewGridTile(tileWrapper.tileType, x, y);
-            map.grid[x, y] = newGridTile;
+            this.grid[x, y] = newGridTile;
         }
-        return map;
     }
 
-    public GameObject createNewGridTile(GridTile.tileType tileType, int xCoor, int yCoor)
+    private GameObject createNewGridTile(GridTile.tileType tileType, int xCoor, int yCoor)
     {
         Vector3 spawnPosition = new Vector3(xCoor, 0, yCoor);
         GameObject newGridTile = Instantiate(gridTile, spawnPosition, this.transform.rotation, this.transform);
