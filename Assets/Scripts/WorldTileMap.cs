@@ -62,11 +62,13 @@ public class WorldTileMap : MonoBehaviour {
         }
     }
 
-    public static WorldTileMap createGridFromJSONData(string json)
+    public static WorldTileMap createGridFromJSONData(WorldTileEditor.WorldJSONWrapper jsonWrapper)
     {
         WorldTileMap map = new WorldTileMap();
         //TODO Manually walk through json, reating the grid and each tile
-        map = JsonUtility.FromJson<WorldTileMap>(json);
+        map.height = jsonWrapper.height;
+        map.width = jsonWrapper.width;
+        
         return map;
     }
 }
