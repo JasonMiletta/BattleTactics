@@ -96,6 +96,7 @@ public class GridTile : MonoBehaviour {
         }
         Destroy(tile);
         tile = Instantiate(tilePrefab, transform.position, transform.rotation, transform);
+        currentTileType = getTileTypeByName(tileTypeName);
 
         isTileBlank = false;
         tile.transform.localScale = Vector3.zero;
@@ -146,24 +147,24 @@ public class GridTile : MonoBehaviour {
         return (GameObject)prefabsOfMatchingTiles[randomIndex];
     }
 
-    private int getTileTypePrefabIndex()
+    private tileType getTileTypeByName(string tileTypName)
     {
-        if(currentTileType == tileType.Blank)
+        if(tileTypName.Equals("Blank"))
         {
-            return 0;
-        } else if(currentTileType == tileType.Tree)
+            return tileType.Blank;
+        } else if(tileTypName.Equals("Grass"))
         {
-            return 1;
+            return tileType.Grass;
         }
-        else if (currentTileType == tileType.Grass)
+        else if (tileTypName.Equals("Tree"))
         {
-            return 2;
+            return tileType.Tree;
         }
-        else if (currentTileType == tileType.Boulder)
+        else if (tileTypName.Equals("Boulder"))
         {
-            return 3;
+            return tileType.Boulder;
         }
 
-        return 0;
+        return tileType.Blank;
     }
 }

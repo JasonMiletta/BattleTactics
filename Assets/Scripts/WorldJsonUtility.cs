@@ -6,11 +6,12 @@ using System;
 
 public class WorldJsonUtility : MonoBehaviour {
     
-    private static string gameDataProjectFilePath = "levelData/levelData.json";
+    private static string gameDataProjectFilePath = "levelData/levelData";
 
     #region SAVE
     //TODO: Flesh out saved file structure -> Currently we're simply overwriting levelData
     //TODO: Ideally we'll have a complete map directory 
+    //TODO: Properly handle overwriting levels?
     public static void saveCurrentGridToJSON(WorldTileMap worldMap)
     {
         if (worldMap != null)
@@ -21,7 +22,16 @@ public class WorldJsonUtility : MonoBehaviour {
 
             jsonData = convertWorldTileGridArrayToJSON(map);
             string filePath = Application.dataPath + "/Resources/" + gameDataProjectFilePath;
-            File.WriteAllText(filePath, jsonData);
+
+            if (File.Exists(filePath + ".json"))
+            {
+                File.WriteAllText(filePath + "1.json", jsonData);
+            }
+            else
+            {
+                File.WriteAllText(filePath + ".json", jsonData);
+            }
+            
         }
     }
 
@@ -43,6 +53,8 @@ public class WorldJsonUtility : MonoBehaviour {
             for (var j = 0; j < height; ++j)
             {
                 GridTile tileComponent = gridArray[i, j].GetComponent<GridTile>();
+                string debugTileComponent = "[" + i + ", " + j + "]" + " " + tileComponent.currentTileType.ToString();
+                Debug.Log(debugTileComponent);
                 TileJSONWrapper tileWrapper = new TileJSONWrapper(tileComponent.currentTileType, i, j);
                 tileList.list.Add(tileWrapper);
             }
