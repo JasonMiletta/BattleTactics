@@ -90,7 +90,9 @@ public class WorldTileMap : MonoBehaviour {
         //Create a border of blank tiles to mess with
         if (xCoor != 0 && xCoor != width - 1 && yCoor != 0 && yCoor != height - 1)
         {
-            newGridTile.GetComponent<GridTile>().enableTile();
+            GridTile gridTile = newGridTile.GetComponent<GridTile>();
+            gridTile.currentTileType = tileType;
+            gridTile.enableTile();
         }
 
         return newGridTile;

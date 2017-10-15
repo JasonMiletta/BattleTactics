@@ -22,10 +22,7 @@ public class GridTile : MonoBehaviour {
 	void Start ()
     {
         originalTileMaterial = tile.GetComponent<Renderer>().material;
-        if(currentTileType != null)
-        {
-            setTilePrefab(currentTileType.ToString());
-        }
+        setTilePrefab(currentTileType.ToString());
     }
 	
 	// Update is called once per frame
@@ -55,9 +52,9 @@ public class GridTile : MonoBehaviour {
 
     public void enableTile()
     {
-        var randomIndex = Random.Range(0, tilePrefabs.Length);
         Destroy(tile);
-        tile = Instantiate(tilePrefabs[randomIndex], transform.position, transform.rotation, transform);
+        GameObject tilePrefab = getTilePrefab(currentTileType.ToString());
+        tile = Instantiate(tilePrefab, transform.position, transform.rotation, transform);
         if (!tile.name.Contains("Blank"))
         {
             isTileBlank = false;
@@ -77,7 +74,7 @@ public class GridTile : MonoBehaviour {
         Unit newUnit = Instantiate<Unit>(testUnitCreate, transform.position, transform.rotation, transform);
     }
 
-    public IEnumerator setTilePrefab(string tileType)
+    public IEnumerator setTilePrefab(string tileTypeName)
     {
         //Shrink existing tiles
         if (ground != null)
@@ -90,16 +87,7 @@ public class GridTile : MonoBehaviour {
         }
 
         //Find new tilePrefab
-        ArrayList prefabsOfMatchingTiles = new ArrayList();
-        foreach (GameObject prefab in tilePrefabs)
-        {
-            if (prefab.name.Contains(tileType))
-            {
-                prefabsOfMatchingTiles.Add(prefab);
-            }
-        }
-        var randomIndex = Random.Range(0, prefabsOfMatchingTiles.Count);
-        GameObject tilePrefab = (GameObject)prefabsOfMatchingTiles[randomIndex];
+        GameObject tilePrefab = getTilePrefab(tileTypeName);
 
         //Wait till existing tiles finish shrinking and delete
         while (tileIsChanging)
@@ -112,7 +100,7 @@ public class GridTile : MonoBehaviour {
         isTileBlank = false;
         tile.transform.localScale = Vector3.zero;
         StartCoroutine(lerpObjToScale(tile, new Vector3(0.1f, 1, 0.1f), 0.25f));
-        if (!tileType.Contains("Blank"))
+        if (!tileTypeName.Contains("Blank"))
         {
             ground.transform.localScale = Vector3.zero;
             ground.SetActive(true);
@@ -142,5 +130,40 @@ public class GridTile : MonoBehaviour {
         }
         tileIsChanging = false;
         yield return null;
+    }
+
+    private GameObject getTilePrefab(string tileTypeName)
+    {
+        ArrayList prefabsOfMatchingTiles = new ArrayList();
+        foreach (GameObject prefab in tilePrefabs)
+        {
+            if (prefab.name.Contains(tileTypeName))
+            {
+                prefabsOfMatchingTiles.Add(prefab);
+            }
+        }
+        var randomIndex = Random.Range(0, prefabsOfMatchingTiles.Count);
+        return (GameObject)prefabsOfMatchingTiles[randomIndex];
+    }
+
+    private int getTileTypePrefabIndex()
+    {
+        if(currentTileType == tileType.Blank)
+        {
+            return 0;
+        } else if(currentTileType == tileType.Tree)
+        {
+            return 1;
+        }
+        else if (currentTileType == tileType.Grass)
+        {
+            return 2;
+        }
+        else if (currentTileType == tileType.Boulder)
+        {
+            return 3;
+        }
+
+        return 0;
     }
 }
