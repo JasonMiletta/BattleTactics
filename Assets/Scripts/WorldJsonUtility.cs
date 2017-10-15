@@ -53,8 +53,6 @@ public class WorldJsonUtility : MonoBehaviour {
             for (var j = 0; j < height; ++j)
             {
                 GridTile tileComponent = gridArray[i, j].GetComponent<GridTile>();
-                string debugTileComponent = "[" + i + ", " + j + "]" + " " + tileComponent.currentTileType.ToString();
-                Debug.Log(debugTileComponent);
                 TileJSONWrapper tileWrapper = new TileJSONWrapper(tileComponent.currentTileType, i, j);
                 tileList.list.Add(tileWrapper);
             }
