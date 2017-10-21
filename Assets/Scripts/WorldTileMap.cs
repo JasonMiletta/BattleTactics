@@ -53,11 +53,13 @@ public class WorldTileMap : MonoBehaviour {
                 grid[i, j] = Instantiate(gridTile, spawnPosition, this.transform.rotation, this.transform);
                 grid[i, j].name = "GridTile " + i + " " + j;
 
+                /*ignore the border stuff for now
                 //Create a border of blank tiles to mess with
                 if (i != 0 && i != width - 1 && j != 0 && j != height - 1)
                 {
                    grid[i, j].GetComponent<GridTile>().enableTile();
                 }
+                */
             }
         }
     }

@@ -7,12 +7,19 @@ using System;
 public class WorldJsonUtility : MonoBehaviour {
     
     private static string gameDataProjectFilePath = "levelData/levelData";
+    private static string levelDataResourceFolder = "levelData/";
+    private static string completeFilePath = Application.dataPath + "/Resources/" + levelDataResourceFolder;
 
     #region SAVE
     //TODO: Flesh out saved file structure -> Currently we're simply overwriting levelData
     //TODO: Ideally we'll have a complete map directory 
     //TODO: Properly handle overwriting levels?
-    public static void saveCurrentGridToJSON(WorldTileMap worldMap)
+    public static void saveMapAsJSON(WorldTileMap worldMap)
+    {
+        saveMapAsJSON(worldMap, null);
+    }
+
+    public static void saveMapAsJSON(WorldTileMap worldMap, string mapName)
     {
         if (worldMap != null)
         {
@@ -21,7 +28,8 @@ public class WorldJsonUtility : MonoBehaviour {
             string jsonData = "";
 
             jsonData = convertWorldTileGridArrayToJSON(map);
-            string filePath = Application.dataPath + "/Resources/" + gameDataProjectFilePath;
+            mapName = mapName == null ? "testLevel" : mapName;  
+            string filePath = completeFilePath + mapName;
 
             if (File.Exists(filePath + ".json"))
             {
@@ -66,16 +74,24 @@ public class WorldJsonUtility : MonoBehaviour {
     #endregion
 
     #region LOAD
-    //TODO: Flesh out file structure -> Ideally we'll be able to load maps by name
-    public static WorldJSONWrapper loadCurrentLevelJSONData(WorldTileMap worldMap)
+    public static WorldJSONWrapper loadLevelData(WorldTileMap worldMap, string levelName)
+    {
+        return loadLevelFromJSONData(worldMap, levelName);
+    }
+    public static WorldJSONWrapper loadLevelData(WorldTileMap worldMap)
+    {
+        return loadLevelFromJSONData(worldMap, null);
+    }
+
+    private static WorldJSONWrapper loadLevelFromJSONData(WorldTileMap worldMap, string levelName)
     {
         string levelFilePath = gameDataProjectFilePath.Replace(".json", "");
         TextAsset targetFile = Resources.Load<TextAsset>(levelFilePath);
         
-        return loadGridFromJSON(targetFile.text, worldMap);
+        return wrapMapFromJSON(targetFile.text, worldMap);
     }
 
-    private static WorldJSONWrapper loadGridFromJSON(string json, WorldTileMap worldMap)
+    private static WorldJSONWrapper wrapMapFromJSON(string json, WorldTileMap worldMap)
     {
         WorldJSONWrapper newMapWrapper = (WorldJSONWrapper)JsonUtility.FromJson(json, System.Type.GetType("WorldJsonUtility").GetNestedType("WorldJSONWrapper"));
 

@@ -35,16 +35,30 @@ public class WorldTileEditor : MonoBehaviour {
 
     public void saveCurrentGridToJSON()
     {
-        WorldJsonUtility.saveCurrentGridToJSON(worldMap);
+        //Display text prompt for filename
+        string fileName = null;
+        WorldJsonUtility.saveMapAsJSON(worldMap, null);
     }
 
-    public void loadCurrentLevelJSONData()
+    //TODO: pull from existing levels in levelData resources and display them in the UI
+    public void displayLevelSelection()
+    {
+        string selectedLevelName = null;
+        loadLevel(selectedLevelName);
+    }
+
+    public void loadLevel()
+    {
+        loadLevel(null);
+    }
+
+    public void loadLevel(string levelName)
     {
         //Destroy the world!!
         destroyCurrentWorld();
 
         //Create the new one from WorldJsonUtility
-        WorldJsonUtility.WorldJSONWrapper newMapWrapper = WorldJsonUtility.loadCurrentLevelJSONData(worldMap);
+        WorldJsonUtility.WorldJSONWrapper newMapWrapper = WorldJsonUtility.loadLevelData(worldMap);
 
         //Properly initialize it into the game
         worldMap.updateMapFromJsonWrapper(newMapWrapper);
