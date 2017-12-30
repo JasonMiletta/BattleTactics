@@ -28,17 +28,11 @@ public class WorldJsonUtility : MonoBehaviour {
             string jsonData = "";
 
             jsonData = convertWorldTileGridArrayToJSON(map);
-            mapName = mapName == null ? "testLevel" : mapName;  
+            mapName = mapName == null || mapName == "" ? "levelData" : mapName;  
             string filePath = completeFilePath + mapName;
 
-            if (File.Exists(filePath + ".json"))
-            {
-                File.WriteAllText(filePath + "1.json", jsonData);
-            }
-            else
-            {
-                File.WriteAllText(filePath + ".json", jsonData);
-            }
+            File.Create(filePath + ".json").Close();
+            File.WriteAllText(filePath + ".json", jsonData);
             
         }
     }
@@ -61,6 +55,7 @@ public class WorldJsonUtility : MonoBehaviour {
             for (var j = 0; j < height; ++j)
             {
                 GridTile tileComponent = gridArray[i, j].GetComponent<GridTile>();
+                Debug.Log(tileComponent.currentTileType);
                 TileJSONWrapper tileWrapper = new TileJSONWrapper(tileComponent.currentTileType, i, j);
                 tileList.list.Add(tileWrapper);
             }
@@ -85,6 +80,7 @@ public class WorldJsonUtility : MonoBehaviour {
 
     private static WorldJSONWrapper loadLevelFromJSONData(WorldTileMap worldMap, string levelName)
     {
+
         string levelFilePath = gameDataProjectFilePath.Replace(".json", "");
         TextAsset targetFile = Resources.Load<TextAsset>(levelFilePath);
         
