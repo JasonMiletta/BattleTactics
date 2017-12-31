@@ -13,6 +13,7 @@ public class WorldTileEditor : MonoBehaviour {
     public WorldTileMap worldMap;
 
     public GameObject saveLoadPrompt;
+    public GameObject loadSelect;
 
     private string gameDataProjectFilePath = "levelData/levelData.json";
 
@@ -48,7 +49,8 @@ public class WorldTileEditor : MonoBehaviour {
     public void promptForLoading()
     {
         currentAction = action.Loading;
-        toggleSaveLoadPrompt();
+        displayLevelSelection();
+        //toggleSaveLoadPrompt();
     }
 
     public void saveCurrentGridToJSON()
@@ -63,8 +65,7 @@ public class WorldTileEditor : MonoBehaviour {
     //TODO: pull from existing levels in levelData resources and display them in the UI
     public void displayLevelSelection()
     {
-        string selectedLevelName = null;
-        loadLevel(selectedLevelName);
+        loadSelect.SetActive(true);
     }
 
     public void loadLevel()
@@ -74,6 +75,7 @@ public class WorldTileEditor : MonoBehaviour {
 
     public void loadLevel(string levelName)
     {
+        loadSelect.SetActive(false);
         //Destroy the world!!
         destroyCurrentWorld();
 
