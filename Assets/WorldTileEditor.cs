@@ -78,7 +78,7 @@ public class WorldTileEditor : MonoBehaviour {
         destroyCurrentWorld();
 
         //Create the new one from WorldJsonUtility
-        WorldJsonUtility.WorldJSONWrapper newMapWrapper = WorldJsonUtility.loadLevelData(worldMap);
+        WorldJsonUtility.WorldJSONWrapper newMapWrapper = WorldJsonUtility.loadLevelData(worldMap, levelName);
 
         //Properly initialize it into the game
         worldMap.updateMapFromJsonWrapper(newMapWrapper);

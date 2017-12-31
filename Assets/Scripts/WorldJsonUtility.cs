@@ -8,7 +8,7 @@ public class WorldJsonUtility : MonoBehaviour {
     
     private static string gameDataProjectFilePath = "levelData/levelData";
     private static string levelDataResourceFolder = "levelData/";
-    private static string completeFilePath = Application.dataPath + "/Resources/" + levelDataResourceFolder;
+    public static string completeFilePath = Application.dataPath + "/Resources/" + levelDataResourceFolder;
 
     #region SAVE
     //TODO: Flesh out saved file structure -> Currently we're simply overwriting levelData
@@ -81,9 +81,18 @@ public class WorldJsonUtility : MonoBehaviour {
     private static WorldJSONWrapper loadLevelFromJSONData(WorldTileMap worldMap, string levelName)
     {
 
-        string levelFilePath = gameDataProjectFilePath.Replace(".json", "");
-        TextAsset targetFile = Resources.Load<TextAsset>(levelFilePath);
-        
+        string levelFilePath = levelDataResourceFolder;
+        TextAsset targetFile;
+        if (levelName == null || levelName == "")
+        {
+            levelFilePath = gameDataProjectFilePath.Replace(".json", "");
+        } else
+        {
+            levelFilePath += levelName.Replace(".json", "");
+        }
+        Debug.Log(levelFilePath);
+        targetFile = Resources.Load<TextAsset>(levelFilePath);
+
         return wrapMapFromJSON(targetFile.text, worldMap);
     }
 
