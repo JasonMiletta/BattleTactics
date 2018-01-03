@@ -5,8 +5,15 @@ using System;
 using UnityEngine;
 
 public class WorldTileEditor : MonoBehaviour {
+
+    public enum action { None, Saving, Loading };
+
+    public action currentAction = action.None;
     public Cursor cursor;
     public WorldTileMap worldMap;
+
+    public GameObject savePrompt;
+    public GameObject loadSelect;
 
     private string gameDataProjectFilePath = "levelData/levelData.json";
 
@@ -33,18 +40,33 @@ public class WorldTileEditor : MonoBehaviour {
         cursor.cursorDeselect();
     }
 
-    public void saveCurrentGridToJSON()
+    public void promptForSaving()
     {
-        //Display text prompt for filename
-        string fileName = null;
-        WorldJsonUtility.saveMapAsJSON(worldMap, null);
+        currentAction = action.Saving;
+        toggleSavePrompt();
     }
 
-    //TODO: pull from existing levels in levelData resources and display them in the UI
-    public void displayLevelSelection()
+    public void promptForLoading()
     {
-        string selectedLevelName = null;
-        loadLevel(selectedLevelName);
+        currentAction = action.Loading;
+        toggleLevelSelection();
+    }
+
+    public void saveCurrentGridToJSON(string filename)
+    {
+        WorldJsonUtility.saveMapAsJSON(worldMap, filename);
+        currentAction = action.None;
+        savePrompt.SetActive(false);
+    }
+
+    private void toggleSavePrompt()
+    {
+        savePrompt.SetActive(!savePrompt.activeSelf);
+    }
+    
+    private void toggleLevelSelection()
+    {
+        loadSelect.SetActive(!loadSelect.activeSelf);
     }
 
     public void loadLevel()
@@ -58,10 +80,13 @@ public class WorldTileEditor : MonoBehaviour {
         destroyCurrentWorld();
 
         //Create the new one from WorldJsonUtility
-        WorldJsonUtility.WorldJSONWrapper newMapWrapper = WorldJsonUtility.loadLevelData(worldMap);
+        WorldJsonUtility.WorldJSONWrapper newMapWrapper = WorldJsonUtility.loadLevelData(worldMap, levelName);
 
         //Properly initialize it into the game
         worldMap.updateMapFromJsonWrapper(newMapWrapper);
+
+        loadSelect.SetActive(false);
+        currentAction = action.None;
     }
     
     private void destroyCurrentWorld()

@@ -8,11 +8,9 @@ public class WorldJsonUtility : MonoBehaviour {
     
     private static string gameDataProjectFilePath = "levelData/levelData";
     private static string levelDataResourceFolder = "levelData/";
-    private static string completeFilePath = Application.dataPath + "/Resources/" + levelDataResourceFolder;
+    public static string completeFilePath = Application.dataPath + "/Resources/" + levelDataResourceFolder;
 
     #region SAVE
-    //TODO: Flesh out saved file structure -> Currently we're simply overwriting levelData
-    //TODO: Ideally we'll have a complete map directory 
     //TODO: Properly handle overwriting levels?
     public static void saveMapAsJSON(WorldTileMap worldMap)
     {
@@ -28,17 +26,11 @@ public class WorldJsonUtility : MonoBehaviour {
             string jsonData = "";
 
             jsonData = convertWorldTileGridArrayToJSON(map);
-            mapName = mapName == null ? "testLevel" : mapName;  
+            mapName = mapName == null || mapName == "" ? "levelData" : mapName;  
             string filePath = completeFilePath + mapName;
 
-            if (File.Exists(filePath + ".json"))
-            {
-                File.WriteAllText(filePath + "1.json", jsonData);
-            }
-            else
-            {
-                File.WriteAllText(filePath + ".json", jsonData);
-            }
+            File.Create(filePath + ".json").Close();
+            File.WriteAllText(filePath + ".json", jsonData);
             
         }
     }
@@ -61,6 +53,7 @@ public class WorldJsonUtility : MonoBehaviour {
             for (var j = 0; j < height; ++j)
             {
                 GridTile tileComponent = gridArray[i, j].GetComponent<GridTile>();
+                Debug.Log(tileComponent.currentTileType);
                 TileJSONWrapper tileWrapper = new TileJSONWrapper(tileComponent.currentTileType, i, j);
                 tileList.list.Add(tileWrapper);
             }
@@ -85,9 +78,19 @@ public class WorldJsonUtility : MonoBehaviour {
 
     private static WorldJSONWrapper loadLevelFromJSONData(WorldTileMap worldMap, string levelName)
     {
-        string levelFilePath = gameDataProjectFilePath.Replace(".json", "");
-        TextAsset targetFile = Resources.Load<TextAsset>(levelFilePath);
-        
+
+        string levelFilePath = levelDataResourceFolder;
+        TextAsset targetFile;
+        if (levelName == null || levelName == "")
+        {
+            levelFilePath = gameDataProjectFilePath.Replace(".json", "");
+        } else
+        {
+            levelFilePath += levelName.Replace(".json", "");
+        }
+        Debug.Log(levelFilePath);
+        targetFile = Resources.Load<TextAsset>(levelFilePath);
+
         return wrapMapFromJSON(targetFile.text, worldMap);
     }
 

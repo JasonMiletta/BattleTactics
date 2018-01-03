@@ -147,24 +147,8 @@ public class GridTile : MonoBehaviour {
         return (GameObject)prefabsOfMatchingTiles[randomIndex];
     }
 
-    private tileType getTileTypeByName(string tileTypName)
+    private tileType getTileTypeByName(string tileTypeName)
     {
-        if(tileTypName.Equals("Blank"))
-        {
-            return tileType.Blank;
-        } else if(tileTypName.Equals("Grass"))
-        {
-            return tileType.Grass;
-        }
-        else if (tileTypName.Equals("Tree"))
-        {
-            return tileType.Tree;
-        }
-        else if (tileTypName.Equals("Boulder"))
-        {
-            return tileType.Boulder;
-        }
-
-        return tileType.Blank;
+        return (tileType)System.Enum.Parse(typeof(tileType), tileTypeName);
     }
 }
