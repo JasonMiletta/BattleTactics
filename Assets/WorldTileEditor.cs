@@ -12,7 +12,7 @@ public class WorldTileEditor : MonoBehaviour {
     public Cursor cursor;
     public WorldTileMap worldMap;
 
-    public GameObject saveLoadPrompt;
+    public GameObject savePrompt;
     public GameObject loadSelect;
 
     private string gameDataProjectFilePath = "levelData/levelData.json";
@@ -43,29 +43,30 @@ public class WorldTileEditor : MonoBehaviour {
     public void promptForSaving()
     {
         currentAction = action.Saving;
-        toggleSaveLoadPrompt();
+        toggleSavePrompt();
     }
 
     public void promptForLoading()
     {
         currentAction = action.Loading;
-        displayLevelSelection();
-        //toggleSaveLoadPrompt();
+        toggleLevelSelection();
     }
 
-    public void saveCurrentGridToJSON()
+    public void saveCurrentGridToJSON(string filename)
     {
-        //Display text prompt for filename
-        string fileName = null;
-        WorldJsonUtility.saveMapAsJSON(worldMap, null);
-
+        WorldJsonUtility.saveMapAsJSON(worldMap, filename);
         currentAction = action.None;
+        savePrompt.SetActive(false);
     }
 
-    //TODO: pull from existing levels in levelData resources and display them in the UI
-    public void displayLevelSelection()
+    private void toggleSavePrompt()
     {
-        loadSelect.SetActive(true);
+        savePrompt.SetActive(!savePrompt.activeSelf);
+    }
+    
+    private void toggleLevelSelection()
+    {
+        loadSelect.SetActive(!loadSelect.activeSelf);
     }
 
     public void loadLevel()
@@ -75,7 +76,6 @@ public class WorldTileEditor : MonoBehaviour {
 
     public void loadLevel(string levelName)
     {
-        loadSelect.SetActive(false);
         //Destroy the world!!
         destroyCurrentWorld();
 
@@ -85,6 +85,7 @@ public class WorldTileEditor : MonoBehaviour {
         //Properly initialize it into the game
         worldMap.updateMapFromJsonWrapper(newMapWrapper);
 
+        loadSelect.SetActive(false);
         currentAction = action.None;
     }
     
@@ -93,21 +94,6 @@ public class WorldTileEditor : MonoBehaviour {
         foreach (GameObject obj in worldMap.grid)
         {
             Destroy(obj);
-        }
-    }
-
-    private void toggleSaveLoadPrompt()
-    {
-        if(saveLoadPrompt != null)
-        {
-            bool isCurrentlyActive = saveLoadPrompt.activeSelf;
-            saveLoadPrompt.SetActive(!isCurrentlyActive);
-
-            //! DO we want to inversely toggle the rest of the UI?
-            //Weird stuff will probably happen if we dont just pause the whole game or handle it
-        } else
-        {
-            Debug.Log("WorldTileEditor - toggleSaveLoadPrompt: No saveLoadPrompt Object was found!");
         }
     }
 }

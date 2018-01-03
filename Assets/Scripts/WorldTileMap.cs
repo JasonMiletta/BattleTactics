@@ -52,14 +52,6 @@ public class WorldTileMap : MonoBehaviour {
                 Vector3 spawnPosition = new Vector3(i, 0, j);
                 grid[i, j] = Instantiate(gridTile, spawnPosition, this.transform.rotation, this.transform);
                 grid[i, j].name = "GridTile " + i + " " + j;
-
-                /*ignore the border stuff for now
-                //Create a border of blank tiles to mess with
-                if (i != 0 && i != width - 1 && j != 0 && j != height - 1)
-                {
-                   grid[i, j].GetComponent<GridTile>().enableTile();
-                }
-                */
             }
         }
     }
@@ -86,16 +78,12 @@ public class WorldTileMap : MonoBehaviour {
     private GameObject createNewGridTile(GridTile.tileType tileType, int xCoor, int yCoor)
     {
         Vector3 spawnPosition = new Vector3(xCoor, 0, yCoor);
-        GameObject newGridTile = Instantiate(gridTile, spawnPosition, this.transform.rotation, this.transform);
+        GameObject newGridTile = Instantiate(this.gridTile, spawnPosition, this.transform.rotation, this.transform);
         newGridTile.name = "GridTile " + xCoor + " " + yCoor;
-
-        //Create a border of blank tiles to mess with
-        if (xCoor != 0 && xCoor != width - 1 && yCoor != 0 && yCoor != height - 1)
-        {
-            GridTile gridTile = newGridTile.GetComponent<GridTile>();
-            gridTile.currentTileType = tileType;
-            gridTile.enableTile();
-        }
+        
+        GridTile gridTile = newGridTile.GetComponent<GridTile>();
+        gridTile.currentTileType = tileType;
+        gridTile.enableTile();
 
         return newGridTile;
     }

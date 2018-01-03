@@ -11,8 +11,6 @@ public class WorldJsonUtility : MonoBehaviour {
     public static string completeFilePath = Application.dataPath + "/Resources/" + levelDataResourceFolder;
 
     #region SAVE
-    //TODO: Flesh out saved file structure -> Currently we're simply overwriting levelData
-    //TODO: Ideally we'll have a complete map directory 
     //TODO: Properly handle overwriting levels?
     public static void saveMapAsJSON(WorldTileMap worldMap)
     {

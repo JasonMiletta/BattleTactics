@@ -9,16 +9,28 @@ public class LevelManager : MonoBehaviour {
 
     public GameObject levelSelectButtonPrefab;
     public WorldTileEditor worldTileEditor;
+    
+    private string[] files;
+    private List<GameObject> levelSelectOptions = new List<GameObject>();
 
 	// Use this for initialization
 	void Start () {
-        Transform childGrid = transform.GetChild(0);
-        string[] files = Directory.GetFiles(WorldJsonUtility.completeFilePath, "*.json");
-        foreach(string file in files)
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+
+    private void OnEnable()
+    {
+        Transform grid = transform.GetChild(0);
+        files = Directory.GetFiles(WorldJsonUtility.completeFilePath, "*.json");
+        foreach (string file in files)
         {
-            if(levelSelectButtonPrefab != null)
+            if (levelSelectButtonPrefab != null)
             {
-                GameObject NewButton = Instantiate(levelSelectButtonPrefab, childGrid);
+                GameObject NewButton = Instantiate(levelSelectButtonPrefab, grid);
 
                 NewButton.GetComponent<Button>().onClick.AddListener(loadLevel);
 
@@ -27,15 +39,18 @@ public class LevelManager : MonoBehaviour {
                 {
                     text.text = file.Substring(file.LastIndexOf("/") + 1);
                 }
+                levelSelectOptions.Add(NewButton);
             }
         }
-       
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
+    private void OnDisable()
+    {
+        foreach(GameObject selectOption in levelSelectOptions)
+        {
+            Destroy(selectOption);
+        }
+    }
 
     public void loadLevel()
     {
