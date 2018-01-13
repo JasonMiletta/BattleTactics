@@ -8,7 +8,6 @@ public class GridTile : MonoBehaviour {
 
     public tileType currentTileType;
     public GameObject[] tilePrefabs;
-    public Unit testUnitCreate;
     public GameObject ground;
 
     private bool isTileBlank = true;
@@ -22,6 +21,9 @@ public class GridTile : MonoBehaviour {
 	void Start ()
     {
         originalTileMaterial = tile.GetComponent<Renderer>().material;
+        if(originalTileMaterial == null)
+        {
+        }
         setTilePrefab(currentTileType.ToString());
     }
 	
@@ -65,13 +67,6 @@ public class GridTile : MonoBehaviour {
             ground.SetActive(true);
             StartCoroutine(lerpObjToScale(ground, new Vector3(1.0f, 50.0f, 1.0f), 0.25f));
         }
-    }
-   
-    //DEBUG
-    public void createTestUnitOnTile()
-    {
-        //DEBUG
-        Unit newUnit = Instantiate<Unit>(testUnitCreate, transform.position, transform.rotation, transform);
     }
 
     public IEnumerator setTilePrefab(string tileTypeName)

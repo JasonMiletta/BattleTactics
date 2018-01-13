@@ -36,7 +36,7 @@ public class WorldTileEditor : MonoBehaviour {
 
     public void spawnUnitOnTile()
     {
-        cursor.selectedGridTile.createTestUnitOnTile();
+        cursor.createTestUnitOnTile();
         cursor.cursorDeselect();
     }
 

@@ -12,6 +12,8 @@ public class Cursor : MonoBehaviour {
     private bool currentlyHasSelectedTile = false;
     private Unit currentlySelectedUnit;
 
+    public Unit testUnit;
+
     // Use this for initialization
     void Start () {
         selectedCursorPrefab = Instantiate(selectedCursorPrefab);
@@ -43,8 +45,24 @@ public class Cursor : MonoBehaviour {
                 }
             }
         }
+
+        //DEBUG
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (selectedGridTile != null)
+            {
+                createTestUnitOnTile();
+            }
+        }
     }
 
+    //DEBUG
+    public void createTestUnitOnTile()
+    {
+        Transform gridTransform = selectedGridTile.transform;
+        Unit newUnit = Instantiate<Unit>(testUnit, gridTransform.position, gridTransform.rotation, gridTransform);
+        cursorDeselect();
+    }
 
     private void updateCursorPosition()
     {
@@ -56,7 +74,11 @@ public class Cursor : MonoBehaviour {
             Debug.DrawLine(mouseRayCast.origin, hit.point);
             GameObject gridObject = hit.collider.gameObject;
             currentHighlightedTile = gridObject.GetComponent<GridTile>();
-            transform.position = Vector3.Lerp(transform.position, gridObject.transform.position, 0.25f);
+        }
+
+        if (currentHighlightedTile != null)
+        {
+            transform.position = Vector3.Lerp(transform.position, currentHighlightedTile.transform.position, 0.25f);
         }
     }
 
