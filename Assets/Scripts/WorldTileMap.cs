@@ -9,27 +9,27 @@ public class WorldTileMap : MonoBehaviour {
     public float height = 10;
 
     public GameObject gridTile;
+    public string levelName;
 
     // Use this for initialization
     void Start () {
-        createGrid();
+        if (levelName != null)
+        {
+            //Create the new one from WorldJsonUtility
+            WorldJsonUtility.WorldJSONWrapper newMapWrapper = WorldJsonUtility.loadLevelData(this, levelName);
+
+            //Properly initialize it into the game
+            updateMapFromJsonWrapper(newMapWrapper);
+        }
+        else
+        {
+            createGrid();
+        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown(1))
-        {
-            if(width > 0 && height > 0 && grid[0,0] != null)
-            {
-                foreach(GameObject obj in grid)
-                {
-                    Destroy(obj);
-                }
-            } else
-            {
-                createGrid();
-            }
-        }
+        
 	}
 
     public void setHeight(UnityEngine.UI.Slider slider)
