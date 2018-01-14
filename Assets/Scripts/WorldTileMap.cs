@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WorldTileMap : MonoBehaviour {
 
+    [SerializeField]
     public GameObject[,] grid;
     public float width = 10;
     public float height = 10;
@@ -28,9 +29,24 @@ public class WorldTileMap : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        
-	}
+	void Update ()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (width > 0 && height > 0 && grid[0, 0] != null)
+            {
+                foreach (GameObject obj in grid)
+                {
+                    Destroy(obj);
+                }
+            }
+            else
+            {
+                createGrid();
+            }
+        }
+
+    }
 
     public void setHeight(UnityEngine.UI.Slider slider)
     {
@@ -58,7 +74,7 @@ public class WorldTileMap : MonoBehaviour {
 
     public void updateMapFromJsonWrapper(WorldJsonUtility.WorldJSONWrapper jsonWrapper)
     {
-        //Manually walk through json, reating the grid and each tile
+        //Manually walk through json, creating the grid and each tile
         this.height = jsonWrapper.height;
         this.width = jsonWrapper.width;
 
@@ -82,6 +98,8 @@ public class WorldTileMap : MonoBehaviour {
         newGridTile.name = "GridTile " + xCoor + " " + yCoor;
         
         GridTile gridTile = newGridTile.GetComponent<GridTile>();
+        gridTile.xCoor = xCoor;
+        gridTile.yCoor = yCoor;
         gridTile.currentTileType = tileType;
         gridTile.enableTile();
 

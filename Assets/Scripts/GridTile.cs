@@ -9,10 +9,16 @@ public class GridTile : MonoBehaviour {
     public tileType currentTileType;
     public GameObject[] tilePrefabs;
     public GameObject ground;
+    public int xCoor;
+    public int yCoor;
 
     private bool isTileBlank = true;
     [SerializeField]
     private GameObject tile;
+    [SerializeField]
+    private GameObject moveOverlay;
+    [SerializeField]
+    private GameObject attackOverlay;
     private Material originalTileMaterial;
 
     private bool tileIsChanging = false;
@@ -44,7 +50,7 @@ public class GridTile : MonoBehaviour {
 
     public void deSelectTile()
     {
-        tile.GetComponent<Renderer>().material = originalTileMaterial;
+        //tile.GetComponent<Renderer>().material = originalTileMaterial;
         Unit unit = GetComponentInChildren<Unit>();
         if (unit != null)
         {
@@ -145,5 +151,51 @@ public class GridTile : MonoBehaviour {
     private tileType getTileTypeByName(string tileTypeName)
     {
         return (tileType)System.Enum.Parse(typeof(tileType), tileTypeName);
+    }
+
+    public void enableMoveOverlay()
+    {
+        if(moveOverlay != null)
+        {
+            moveOverlay.SetActive(true);
+        }
+        if(attackOverlay != null)
+        {
+            attackOverlay.SetActive(false);
+        }
+    }
+
+    public void disableMoveOverlay()
+    {
+        if (moveOverlay != null)
+        {
+            moveOverlay.SetActive(false);
+        }
+    }
+
+    public bool isMoveable()
+    {
+        return moveOverlay.activeSelf;
+    }
+
+    public void enableAttackOverlay()
+    {
+        if(attackOverlay != null && !moveOverlay.activeSelf)
+        {
+            attackOverlay.SetActive(true);
+        }
+    }
+
+    public void disableAttackOverlay()
+    {
+        if(attackOverlay != null)
+        {
+            attackOverlay.SetActive(false);
+        }
+    }
+
+    public bool isOverlayActive()
+    {
+        return attackOverlay.activeSelf || moveOverlay.activeSelf;
     }
 }

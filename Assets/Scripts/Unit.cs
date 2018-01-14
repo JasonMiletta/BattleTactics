@@ -5,13 +5,22 @@ using UnityEngine;
 public class Unit : MonoBehaviour {
 
     public GameObject unitModel;
+    public int moveDistance = 1;
+    public int minAttackRange = 1;
+    public int maxAttackRange = 1;
+
     public Material selectedMaterial;
 
     private Material originalMaterial;
 
-	// Use this for initialization
-	void Start () {
-        originalMaterial = unitModel.GetComponent<Renderer>().material;
+
+    public delegate void UnitEvent(int xCoor, int yCoor, int moveDistance);
+    public static event UnitEvent OnUnitSelect;
+    public static event UnitEvent OnUnitDeselect;
+
+    // Use this for initialization
+    void Start () {
+        //originalMaterial = unitModel.GetComponent<Renderer>().material;
 	}
 	
 	// Update is called once per frame
@@ -20,6 +29,13 @@ public class Unit : MonoBehaviour {
 
     public void moveUnitToGridTile(GridTile tile)
     {
+        float angle = Vector3.Angle(transform.forward, tile.transform.position - transform.position);
+        Vector3 cross = Vector3.Cross(transform.forward, tile.transform.position - transform.position);
+        if(cross.y < 0)
+        {
+            angle = -angle;
+        }
+        transform.Rotate(Vector3.up, angle);
         transform.parent = tile.transform;
         StartCoroutine(smoothMovementCoRoutine(transform.position, tile.transform.position, 0.05f));
         deselectUnit();
@@ -40,10 +56,20 @@ public class Unit : MonoBehaviour {
     public void selectUnit()
     {
         //unitModel.GetComponent<Renderer>().material = Resources.Load("Selected") as Material;
+        GridTile tile = GetComponentInParent<GridTile>();
+        if(tile != null && OnUnitSelect != null)
+        {
+            OnUnitSelect(tile.xCoor, tile.yCoor, moveDistance);
+        }
     }
 
     public void deselectUnit()
     {
         //unitModel.GetComponent<Renderer>().material = originalMaterial;
+        GridTile tile = GetComponentInParent<GridTile>();
+        if (tile != null && OnUnitDeselect != null)
+        {
+            OnUnitDeselect(tile.xCoor, tile.yCoor, moveDistance);
+        }
     }
 }

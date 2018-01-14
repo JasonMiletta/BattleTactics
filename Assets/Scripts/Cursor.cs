@@ -29,11 +29,9 @@ public class Cursor : MonoBehaviour {
         {
             if (Input.GetMouseButtonDown(0))
             {
-
                 if (currentlySelectedUnit)
                 {
-                    currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
-                    cursorDeselect();
+                    cursorSelect();
                 }
                 else if (currentlyHasSelectedTile)
                 {
@@ -52,6 +50,9 @@ public class Cursor : MonoBehaviour {
             if (selectedGridTile != null)
             {
                 createTestUnitOnTile();
+            } else
+            {
+                cursorDeselect();
             }
         }
     }
@@ -84,8 +85,19 @@ public class Cursor : MonoBehaviour {
 
     public void cursorSelect()
     {
-        currentlyHasSelectedTile = selectCurrentTile();
-
+        //If we're currently moving a unit
+        if (currentlySelectedUnit != null)
+        {
+            if (currentHighlightedTile.isMoveable())
+            {
+                currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
+                cursorDeselect();
+            }
+        }
+        else
+        {
+            currentlyHasSelectedTile = selectCurrentTile();
+        }
         selectedCursorPrefab.transform.position = selectedGridTile.transform.position;
         selectedCursorPrefab.SetActive(true);
 
@@ -95,6 +107,7 @@ public class Cursor : MonoBehaviour {
 
     public void cursorDeselect()
     {
+        //Set highlighter to inactive
         selectedCursorPrefab.SetActive(false);
         selectedGridTile.deSelectTile();
         selectedGridTile = null;
@@ -110,7 +123,6 @@ public class Cursor : MonoBehaviour {
         {
             selectedGridTile = currentHighlightedTile.selectTile();
             currentlySelectedUnit = currentHighlightedTile.getChildUnit();
-            Debug.Log(currentlySelectedUnit);
             return true;
         }
         return false;
