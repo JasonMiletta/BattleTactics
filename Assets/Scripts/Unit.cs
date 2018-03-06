@@ -5,9 +5,15 @@ using UnityEngine;
 public class Unit : MonoBehaviour {
 
     public GameObject unitModel;
+
+    #region UNIT_STATS
     public int moveDistance = 1;
     public int minAttackRange = 1;
     public int maxAttackRange = 1;
+    public int totalHealth = 1;
+    public int currentHealth = 1;
+    public int attackStrength = 1;
+    #endregion
 
     public Material selectedMaterial;
 
@@ -18,9 +24,13 @@ public class Unit : MonoBehaviour {
     public static event UnitEvent OnUnitSelect;
     public static event UnitEvent OnUnitDeselect;
 
+    #region ANIMATIONS
+    private Anim_Floating anim_Floating;
+    #endregion
+
     // Use this for initialization
     void Start () {
-        //originalMaterial = unitModel.GetComponent<Renderer>().material;
+        anim_Floating = GetComponentInChildren<Anim_Floating>();
 	}
 	
 	// Update is called once per frame
@@ -55,7 +65,7 @@ public class Unit : MonoBehaviour {
 
     public void selectUnit()
     {
-        //unitModel.GetComponent<Renderer>().material = Resources.Load("Selected") as Material;
+        toggleFloatingAnimation();
         GridTile tile = GetComponentInParent<GridTile>();
         if(tile != null && OnUnitSelect != null)
         {
@@ -65,11 +75,28 @@ public class Unit : MonoBehaviour {
 
     public void deselectUnit()
     {
-        //unitModel.GetComponent<Renderer>().material = originalMaterial;
+        toggleFloatingAnimation();
         GridTile tile = GetComponentInParent<GridTile>();
         if (tile != null && OnUnitDeselect != null)
         {
             OnUnitDeselect(tile.xCoor, tile.yCoor, moveDistance);
+        }
+    }
+
+    //@Description - Used when inflicting damage to another unit
+    public void attackUnit(){
+        //TODO deal damage to other unit
+
+    }
+    
+    //@Description - used to inflict damage to this unit
+    public void takeDamage(int incomingAttackStrength){
+        currentHealth -= incomingAttackStrength;
+    }
+
+    private void toggleFloatingAnimation(){
+        if(anim_Floating != null){
+            anim_Floating.toggleAnimation();
         }
     }
 }
