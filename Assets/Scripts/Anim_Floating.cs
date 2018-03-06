@@ -21,8 +21,8 @@ public class Anim_Floating : MonoBehaviour {
     {
         if(isActive){
             // Float up/down with a Sin()
-            scale = Mathf.Sin(Time.fixedTime* Mathf.PI * frequency) * amplitude;
-            transform.localPosition += new Vector3(0, scale, 0);
+            scale = Mathf.Cos(Time.fixedTime* Mathf.PI * frequency) * amplitude;
+            transform.localPosition -= new Vector3(0, scale, 0);
         }
     }
 
