@@ -92,6 +92,9 @@ public class Cursor : MonoBehaviour {
             {
                 currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
                 cursorDeselect();
+            } else if (currentHighlightedTile.isAttackable()){
+                currentlySelectedUnit.attackTile(currentHighlightedTile);
+                cursorDeselect();
             }
         }
         else

@@ -178,6 +178,11 @@ public class GridTile : MonoBehaviour {
         return moveOverlay.activeSelf;
     }
 
+    public bool isAttackable()
+    {
+        return attackOverlay.activeSelf;
+    }
+
     public void enableAttackOverlay()
     {
         if(attackOverlay != null && !moveOverlay.activeSelf)

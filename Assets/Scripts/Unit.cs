@@ -15,6 +15,11 @@ public class Unit : MonoBehaviour {
     public int attackStrength = 1;
     #endregion
 
+    #region UNIT_STATE
+    private bool hasMoved = false;
+    private bool hasAttacked = false;
+    #endregion
+
     public Material selectedMaterial;
 
     private Material originalMaterial;
@@ -84,9 +89,10 @@ public class Unit : MonoBehaviour {
     }
 
     //@Description - Used when inflicting damage to another unit
-    public void attackUnit(){
+    public void attackTile(GridTile tile){
         //TODO deal damage to other unit
-
+        Debug.Log("Attacking Tile! " + tile.name);
+        deselectUnit();
     }
     
     //@Description - used to inflict damage to this unit
