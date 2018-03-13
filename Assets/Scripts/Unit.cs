@@ -90,7 +90,11 @@ public class Unit : MonoBehaviour {
 
     //@Description - Used when inflicting damage to another unit
     public void attackTile(GridTile tile){
-        //TODO deal damage to other unit
+        GameObject poof = Resources.Load("Particle Systems/Poof") as GameObject;
+        GameObject newPoofObj = Instantiate(poof, tile.transform.position, poof.transform.rotation, tile.transform);
+        ParticleSystem newPoof = newPoofObj.GetComponent<ParticleSystem>();
+        newPoof.Play();
+        Destroy(newPoof, 2.0f);
         Debug.Log("Attacking Tile! " + tile.name);
         deselectUnit();
     }
