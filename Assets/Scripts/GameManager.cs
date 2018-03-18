@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    #region GAME_STATE
+    public int turnNumber = 0;
+    #endregion
     void Start(){
         //TODO: Initialize mainmenu
 
@@ -12,5 +15,9 @@ public class GameManager : MonoBehaviour {
 
     public void loadEditor(){
         //TODO load editor scene
+    }
+
+    public void startLevel(){
+        ++turnNumber;
     }
 }

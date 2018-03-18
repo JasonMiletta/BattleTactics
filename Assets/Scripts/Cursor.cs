@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Cursor : MonoBehaviour {
-    public enum CursorState {Empty, TileSelect, UnitMove, UnitAction};
+    public enum CursorState {Empty, TileSelect, UnitSelect, UnitMove, UnitAction};
 
     public GridTile selectedGridTile;
     public GridTile currentHighlightedTile;
@@ -59,10 +59,12 @@ public class Cursor : MonoBehaviour {
             }
         }
 
-        if(Input.GetAxis("Hotkey1") > 0){
-
-        } else if(Input.GetAxis("Hotkey2") > 0){
-            GameObject poof = Resources.Load("Poof") as GameObject;
+        if(currentCursorState == CursorState.UnitSelect){
+            if(Input.GetAxis("Hotkey1") > 0){
+                currentCursorState = CursorState.UnitMove;
+            } else if(Input.GetAxis("Hotkey2") > 0){
+                currentCursorState = CursorState.UnitAction;
+            }
         }
     }
 
