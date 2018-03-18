@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Cursor : MonoBehaviour {
+    public enum CursorState {Empty, TileSelected, UnitSelected, UnitMove, UnitAction};
     public GridTile selectedGridTile;
     public GridTile currentHighlightedTile;
     public GameObject selectedCursorPrefab;
@@ -31,6 +32,11 @@ public class Cursor : MonoBehaviour {
             {
                 if (currentlySelectedUnit)
                 {
+                    if(Input.GetAxis("Hotkey1") > 0){
+                        Debug.Log("Hotkey1!");
+                    } else if(Input.GetAxis("Hotkey2") > 0){
+                        Debug.Log("Hotkey2!");
+                    }
                     cursorSelect();
                 }
                 else if (currentlyHasSelectedTile)
