@@ -16,6 +16,7 @@ public class Unit : MonoBehaviour {
     #endregion
 
     #region UNIT_STATE
+    public int teamNumber = 0;
     private bool hasMoved = false;
     private bool hasAttacked = false;
     #endregion
