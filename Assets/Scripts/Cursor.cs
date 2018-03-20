@@ -63,11 +63,12 @@ public class Cursor : MonoBehaviour {
             }
         }
 
-        if(currentCursorState == CursorState.UnitSelect){
+        if(currentCursorState == CursorState.UnitSelected){
             if(Input.GetAxis("Hotkey1") > 0){
                 currentCursorState = CursorState.UnitMove;
             } else if(Input.GetAxis("Hotkey2") > 0){
                 currentCursorState = CursorState.UnitAction;
+                GameObject poof = Resources.Load("Poof") as GameObject;
             }
         }
     }
