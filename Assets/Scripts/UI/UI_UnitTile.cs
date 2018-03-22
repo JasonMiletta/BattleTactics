@@ -20,7 +20,7 @@ public class UI_UnitTile : MonoBehaviour {
 		Text[] textComponents = GetComponentsInChildren<Text>();
 		foreach(Text textObject in textComponents){
 			if(textObject.name == "Name"){
-				textObject.text = "Name: " + unit.name;
+				textObject.text = "Name: " + unit.unitName;
 			} else if(textObject.name == "Health"){
 				textObject.text = "Health: " + unit.currentHealth;
 			}

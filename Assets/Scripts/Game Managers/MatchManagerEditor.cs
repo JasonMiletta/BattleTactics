@@ -14,5 +14,8 @@ public class MatchManagerEditor : Editor
         {
             matchManagerScript.initializeTeams();
         }
+        if(GUILayout.Button("End Turn")){
+            matchManagerScript.proceedToNextTeamsTurn();
+        }
     }
 }

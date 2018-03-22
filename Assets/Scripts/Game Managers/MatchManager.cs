@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class MatchManager : MonoBehaviour {
 
+    public GameObject HUD;
+
     #region GAME_STATE
-    private int turnNumber = 1;
-    private int teamCount = 1;
-    private int currentTurnTeamNumber = 0;
+    public int turnNumber = 1;
+    public int teamCount = 2;
+    public int teamNumberCurrentlyPlaying = 1;
     Dictionary<int, Team> teamDictionary = new Dictionary<int, Team>();
     #endregion
 
+    #region COMPONENTS
+    private UI_HUDManager HUDManager;
+    #endregion
     void OnEnable()
     {
         Unit.OnUnitCreate += handleUnitCreated;
@@ -25,6 +30,12 @@ public class MatchManager : MonoBehaviour {
 
     void Start(){
         //TODO: Initialize mainmenu
+        if(HUD == null){
+            HUD = GameObject.FindGameObjectWithTag("HUD");
+        }
+        if(HUD != null){
+            HUDManager = HUD.GetComponent<UI_HUDManager>();
+        }
         startLevel();
     }
 
@@ -42,8 +53,8 @@ public class MatchManager : MonoBehaviour {
     public int getCurrentTurnNumber(){
         return turnNumber;
     }
-    public int getCurrentTeamNumberTurn(){
-        return currentTurnTeamNumber;
+    public int getTeamNumberCurrentlyPlaying(){
+        return teamNumberCurrentlyPlaying;
     }
 
     public Team getCurrentTeam(int teamNumber){
@@ -52,13 +63,15 @@ public class MatchManager : MonoBehaviour {
 
         return currentTeamList;
     }
-    public void nextTeamsTurn(){
-        ++currentTurnTeamNumber;
-        if(currentTurnTeamNumber >= teamCount){
-            currentTurnTeamNumber = 0;
+    public void proceedToNextTeamsTurn(){
+        ++teamNumberCurrentlyPlaying;
+        if(teamNumberCurrentlyPlaying > teamCount){
+            teamNumberCurrentlyPlaying = 1;
             ++turnNumber;
         }
+        HUDManager.updateHud(turnNumber, teamNumberCurrentlyPlaying);
     }
+
     public void initializeTeams(){
         foreach(Unit unit in GameObject.FindObjectsOfType<Unit>()){
             int teamNumber = unit.teamNumber;
@@ -101,14 +114,12 @@ public class MatchManager : MonoBehaviour {
     }
 
     private void handleUnitCreated(Unit unit){
-        Debug.Log("A new unit was created!");
-        Debug.Log(unit.name);
+        Debug.Log(unit.name + " was created!");
         addUnitToTeam(unit);
     }
 
     private void handleUnitDeleted(Unit unit){
-        Debug.Log("A unit was destroyed!");
-        Debug.Log(unit.name);
+        Debug.Log(unit.name + " was destroyed!");
         removeUnitFromTeam(unit);
     }
 

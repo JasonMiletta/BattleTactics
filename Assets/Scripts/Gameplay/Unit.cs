@@ -6,6 +6,10 @@ public class Unit : MonoBehaviour {
 
     public GameObject unitModel;
 
+    #region UNIT_INFO
+    public string unitName = "Test";
+    #endregion
+
     #region UNIT_STATS
     public int moveDistance = 1;
     public int minAttackRange = 1;
