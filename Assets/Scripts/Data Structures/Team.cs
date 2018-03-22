@@ -7,6 +7,17 @@ public class Team {
 
     public List<Unit> teamUnitList = new List<Unit>();
 
+    #region EVENTS
+    public delegate void UnitAddedToList(Unit unit);
+    public static event UnitAddedToList OnUnitAdded;
+
+    public delegate void UnitRemovedFromList(Unit unit);
+    public static event UnitRemovedFromList OnUnitRemoved;
+    #endregion
+
+    public Team(int teamNumber){
+        new Team(teamNumber, new List<Unit>());
+    }
     public Team(int teamNumber, List<Unit> unitList){
         this.teamNumber = teamNumber;
         this.teamUnitList = unitList;
@@ -14,9 +25,11 @@ public class Team {
 
     public void addUnit(Unit u){
         teamUnitList.Add(u);
+        OnUnitAdded(u);
     }
 
     public void removeUnit(Unit u){
         teamUnitList.Remove(u);
+        OnUnitRemoved(u);
     }
 }

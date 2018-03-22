@@ -25,10 +25,17 @@ public class Unit : MonoBehaviour {
 
     private Material originalMaterial;
 
+    #region EVENTS
+    public delegate void UnitSelectEvent(int xCoor, int yCoor, int moveDistance);
+    public static event UnitSelectEvent OnUnitSelect;
+    public static event UnitSelectEvent OnUnitDeselect;
 
-    public delegate void UnitEvent(int xCoor, int yCoor, int moveDistance);
-    public static event UnitEvent OnUnitSelect;
-    public static event UnitEvent OnUnitDeselect;
+    public delegate void UnitCreateEvent(Unit unit);
+    public static event UnitCreateEvent OnUnitCreate;
+
+    public delegate void UnitDestroyEvent(Unit unit);
+    public static event UnitDestroyEvent OnUnitDestroy;
+    #endregion
 
     #region ANIMATIONS
     private Anim_Floating anim_Floating;
@@ -36,11 +43,20 @@ public class Unit : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        if(OnUnitCreate != null){
+            OnUnitCreate(this);
+        }
         anim_Floating = GetComponentInChildren<Anim_Floating>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+    }
+
+    void OnDestroy(){
+        if(OnUnitDestroy != null){
+            OnUnitDestroy(this);
+        }
     }
 
     public void moveUnitToGridTile(GridTile tile)
