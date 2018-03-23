@@ -91,7 +91,7 @@ public class Unit : MonoBehaviour {
 
     public void selectUnit()
     {
-        toggleFloatingAnimation();
+        enableFloatingAnimation();
         GridTile tile = GetComponentInParent<GridTile>();
         if(tile != null && OnUnitSelect != null)
         {
@@ -101,7 +101,7 @@ public class Unit : MonoBehaviour {
 
     public void deselectUnit()
     {
-        toggleFloatingAnimation();
+        disableFloatingAnimation();
         GridTile tile = GetComponentInParent<GridTile>();
         if (tile != null && OnUnitDeselect != null)
         {
@@ -124,10 +124,10 @@ public class Unit : MonoBehaviour {
     public void takeDamage(int incomingAttackStrength){
         currentHealth -= incomingAttackStrength;
     }
-
-    private void toggleFloatingAnimation(){
-        if(anim_Floating != null){
-            anim_Floating.toggleAnimation();
-        }
+    private void enableFloatingAnimation(){
+        anim_Floating.enableAnimation();
+    }
+    private void disableFloatingAnimation(){
+        anim_Floating.disableAnimation();
     }
 }

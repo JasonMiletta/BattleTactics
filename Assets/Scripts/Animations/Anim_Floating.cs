@@ -10,6 +10,7 @@ public class Anim_Floating : MonoBehaviour {
 
     // Position Storage Variables
     float scale = new float();
+    private Vector3 originalPosition;
 
     // Use this for initialization
     void Start()
@@ -28,5 +29,15 @@ public class Anim_Floating : MonoBehaviour {
 
     public void toggleAnimation(){
         isActive = !isActive;
+    }
+
+    public void enableAnimation(){
+        originalPosition = this.transform.localPosition;
+        isActive = true;
+    }
+
+    public void disableAnimation(){
+        isActive = false;
+        this.transform.localPosition = originalPosition;
     }
 }
