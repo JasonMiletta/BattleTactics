@@ -117,17 +117,40 @@ public class Unit : MonoBehaviour {
         newPoof.Play();
         Destroy(newPoof, 2.0f);
         Debug.Log("Attacking Tile! " + tile.name);
+        
+        Unit tileUnit = tile.getChildUnit();
+        if(tileUnit != null){
+            tileUnit.takeDamage(attackStrength);
+        }
         deselectUnit();
     }
     
     //@Description - used to inflict damage to this unit
     public void takeDamage(int incomingAttackStrength){
         currentHealth -= incomingAttackStrength;
+        if(this.currentHealth <= 0){
+            playDestructionParticle();
+            Destroy(gameObject);
+        }
     }
     private void enableFloatingAnimation(){
-        anim_Floating.enableAnimation();
+        Vector3 floatAbovePosition = transform.position + new Vector3(0, 0.5f, 0);
+        StartCoroutine(smoothMovementCoRoutine(transform.position, floatAbovePosition, 0.05f));
+        if(anim_Floating != null){
+            anim_Floating.enableAnimation();
+        }
     }
     private void disableFloatingAnimation(){
-        anim_Floating.disableAnimation();
+        if(anim_Floating != null){
+            anim_Floating.disableAnimation();
+        }
+    }
+
+    private void playDestructionParticle(){
+        GameObject poof = Resources.Load("Particle Systems/Poof") as GameObject;
+        GameObject newPoofObj = Instantiate(poof, this.transform, true);
+        ParticleSystem newPoof = newPoofObj.GetComponent<ParticleSystem>();
+        newPoof.Play();
+        Destroy(newPoof, 2.0f);
     }
 }
