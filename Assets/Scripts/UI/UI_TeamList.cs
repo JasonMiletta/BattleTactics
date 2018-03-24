@@ -36,7 +36,9 @@ public class UI_TeamList : MonoBehaviour {
 		UI_UnitTile newUnitTile = newTile.GetComponent<UI_UnitTile>();
 		newUnitTile.setUnit(unit);
 
-		unitTileDictionary.Add(unit, newTile);
+		if(!unitTileDictionary.ContainsKey(unit)){
+			unitTileDictionary.Add(unit, newTile);
+		}
 	}
 
 	public void removeUnitTile(Unit unit){

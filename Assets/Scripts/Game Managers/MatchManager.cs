@@ -57,19 +57,22 @@ public class MatchManager : MonoBehaviour {
         return teamNumberCurrentlyPlaying;
     }
 
-    public Team getCurrentTeam(int teamNumber){
+    public Team getTeamByNumber(int teamNumber){
         Team currentTeamList;
         teamDictionary.TryGetValue(teamNumber, out currentTeamList);
 
         return currentTeamList;
     }
     public void proceedToNextTeamsTurn(){
+        cleanupUnitsByTeam(teamNumberCurrentlyPlaying);
         ++teamNumberCurrentlyPlaying;
         if(teamNumberCurrentlyPlaying > teamCount){
             teamNumberCurrentlyPlaying = 1;
             ++turnNumber;
         }
+        prepareUnitsByTeam(teamNumberCurrentlyPlaying);
         HUDManager.updateHud(turnNumber, teamNumberCurrentlyPlaying);
+
     }
 
     public void initializeTeams(){
@@ -128,5 +131,27 @@ public class MatchManager : MonoBehaviour {
         Team team = new Team(teamNumber);
         teamDictionary.Add(teamNumber, team);
         return team;
+    }
+
+    private void prepareUnitsByTeam(int teamNumber){
+        Team team = getTeamByNumber(teamNumber);
+        if(team != null){
+            foreach(Unit u in team.teamUnitList){
+                u.prepareUnitForTurn();
+            }
+        } else {
+            Debug.LogError("We couldn't find the team for the indicated number: " + teamNumber);
+        }
+    }
+
+    private void cleanupUnitsByTeam(int teamNumber){
+        Team team = getTeamByNumber(teamNumber);
+        if(team != null){
+            foreach(Unit u in team.teamUnitList){
+                u.cleanpUnitForTurn();
+            }
+        } else {
+            Debug.LogError("We couldn't find the team for the indicated number: " + teamNumber);
+        }
     }
 }

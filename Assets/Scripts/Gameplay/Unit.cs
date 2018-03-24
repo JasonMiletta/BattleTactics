@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour {
 
+    #region UNIT_COMPONENTS
     public GameObject unitModel;
-
+    public GameObject unitStateIndicator;
+    #endregion
+    
     #region UNIT_INFO
     public string unitName = "Test";
     #endregion
@@ -21,6 +24,7 @@ public class Unit : MonoBehaviour {
 
     #region UNIT_STATE
     public int teamNumber = 0;
+    public bool isEnabled = false;
     private bool hasMoved = false;
     private bool hasAttacked = false;
     #endregion
@@ -71,6 +75,7 @@ public class Unit : MonoBehaviour {
         {
             angle = -angle;
         }
+        Debug.Log(angle);
         transform.Rotate(Vector3.up, angle);
         transform.parent = tile.transform;
         StartCoroutine(smoothMovementCoRoutine(transform.position, tile.transform.position, 0.05f));
@@ -120,7 +125,6 @@ public class Unit : MonoBehaviour {
         
         Unit tileUnit = tile.getChildUnit();
         if(tileUnit != null){
-            tileUnit.takeDamage(attackStrength);
         }
         deselectUnit();
     }
@@ -133,6 +137,21 @@ public class Unit : MonoBehaviour {
             Destroy(gameObject);
         }
     }
+
+    public void prepareUnitForTurn(){
+        isEnabled = true;
+        hasMoved = false;
+        hasAttacked = false;
+        Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.25f, 0.25f, 0.25f), 0.5f);
+    }
+
+    public void cleanpUnitForTurn(){
+        isEnabled = false;
+        hasMoved = true;
+        hasAttacked = true;
+        Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.0f, 0.0f, 0.0f), 0.5f);
+    }
+
     private void enableFloatingAnimation(){
         Vector3 floatAbovePosition = transform.position + new Vector3(0, 0.5f, 0);
         StartCoroutine(smoothMovementCoRoutine(transform.position, floatAbovePosition, 0.05f));
