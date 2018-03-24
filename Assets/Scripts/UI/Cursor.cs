@@ -56,8 +56,14 @@ public class Cursor : MonoBehaviour {
         {
             if (selectedGridTile != null)
             {
+                cursorDeselect();
+            }
+        }
+
+        if(Input.GetKeyDown(KeyCode.X)){
+            if (selectedGridTile != null){
                 createTestUnitOnTile();
-            } else
+            } else 
             {
                 cursorDeselect();
             }

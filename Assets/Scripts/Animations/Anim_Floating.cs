@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Anim_Floating : MonoBehaviour {
     
-    public float amplitude = 0.01f;
+    public float amplitude = 0.25f;
     public float frequency = 1.0f;
     public bool isActive = false;
 
@@ -22,7 +22,7 @@ public class Anim_Floating : MonoBehaviour {
     {
         if(isActive){
             // Float up/down with a Sin()
-            scale = Mathf.Cos(Time.fixedTime* Mathf.PI * frequency) * amplitude;
+            scale = Mathf.Cos(Time.fixedTime * Mathf.PI * frequency) * amplitude * Time.deltaTime;
             transform.localPosition -= new Vector3(0, scale, 0);
         }
     }
