@@ -78,29 +78,20 @@ public class Unit : MonoBehaviour {
         Debug.Log(angle);
         transform.Rotate(Vector3.up, angle);
         transform.parent = tile.transform;
-        StartCoroutine(smoothMovementCoRoutine(transform.position, tile.transform.position, 0.05f));
+        StartCoroutine(Util_TransformManipulation.smoothMovementCoRoutine(gameObject, transform.position, tile.transform.position, 0.05f));
+        disableActionIndicator();
         deselectUnit();
-    }
-
-    private IEnumerator smoothMovementCoRoutine(Vector3 source, Vector3 destination, float duration)
-    {
-        float startTime = Time.time;
-        while (Time.time < startTime + duration)
-        {
-            transform.position = Vector3.Lerp(source, destination, (Time.time - startTime) / duration);
-            yield return null;
-        }
-        transform.position = destination;
-        yield return null;
     }
 
     public void selectUnit()
     {
-        enableFloatingAnimation();
-        GridTile tile = GetComponentInParent<GridTile>();
-        if(tile != null && OnUnitSelect != null)
-        {
-            OnUnitSelect(tile.xCoor, tile.yCoor, moveDistance);
+        if(isEnabled && !hasAttacked && !hasMoved){
+            enableFloatingAnimation();
+            GridTile tile = GetComponentInParent<GridTile>();
+            if(tile != null && OnUnitSelect != null)
+            {
+                OnUnitSelect(tile.xCoor, tile.yCoor, moveDistance);
+            }
         }
     }
 
@@ -125,7 +116,10 @@ public class Unit : MonoBehaviour {
         
         Unit tileUnit = tile.getChildUnit();
         if(tileUnit != null){
+            tileUnit.takeDamage(attackStrength);
         }
+        hasAttacked = true;
+        disableActionIndicator();
         deselectUnit();
     }
     
@@ -142,19 +136,19 @@ public class Unit : MonoBehaviour {
         isEnabled = true;
         hasMoved = false;
         hasAttacked = false;
-        Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.25f, 0.25f, 0.25f), 0.5f);
+        enableActionIndicator();
     }
 
     public void cleanpUnitForTurn(){
         isEnabled = false;
         hasMoved = true;
         hasAttacked = true;
-        Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.0f, 0.0f, 0.0f), 0.5f);
+        disableActionIndicator();
     }
 
     private void enableFloatingAnimation(){
         Vector3 floatAbovePosition = transform.position + new Vector3(0, 0.5f, 0);
-        StartCoroutine(smoothMovementCoRoutine(transform.position, floatAbovePosition, 0.05f));
+        StartCoroutine(Util_TransformManipulation.smoothMovementCoRoutine(gameObject, transform.position, floatAbovePosition, 0.05f));
         if(anim_Floating != null){
             anim_Floating.enableAnimation();
         }
@@ -163,6 +157,14 @@ public class Unit : MonoBehaviour {
         if(anim_Floating != null){
             anim_Floating.disableAnimation();
         }
+    }
+
+    private void enableActionIndicator(){
+         StartCoroutine(Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.25f, 0.25f, 0.25f), 0.5f));
+    }
+
+    private void disableActionIndicator(){
+        StartCoroutine(Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.0f, 0.0f, 0.0f), 0.5f));
     }
 
     private void playDestructionParticle(){

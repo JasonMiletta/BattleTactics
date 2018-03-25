@@ -19,4 +19,16 @@ public class Util_TransformManipulation {
         }
         yield return null;
     }
+
+    public static IEnumerator smoothMovementCoRoutine(GameObject obj, Vector3 source, Vector3 destination, float duration)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + duration)
+        {
+            obj.transform.position = Vector3.Lerp(source, destination, (Time.time - startTime) / duration);
+            yield return null;
+        }
+        obj.transform.position = destination;
+        yield return null;
+    }
 }
