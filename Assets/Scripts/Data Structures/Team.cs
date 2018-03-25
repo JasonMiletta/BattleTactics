@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Team {
-    public int teamNumber = 0;
+    public int teamNumber = 1;
 
     public List<Unit> teamUnitList = new List<Unit>();
 
@@ -16,9 +16,13 @@ public class Team {
     #endregion
 
     public Team(int teamNumber){
-        new Team(teamNumber, new List<Unit>());
+        InitializeTeam(teamNumber, new List<Unit>());
     }
     public Team(int teamNumber, List<Unit> unitList){
+        InitializeTeam(teamNumber, unitList);
+    }
+
+    private void InitializeTeam(int teamNumber, List<Unit> unitList){
         this.teamNumber = teamNumber;
         this.teamUnitList = unitList;
     }

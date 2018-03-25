@@ -8,6 +8,7 @@ public class UI_HUDManager : MonoBehaviour {
 	#region HUD_COMPONENTS
 	public GameObject Text_TurnCounter;
 	public GameObject Text_CurrentTeamPlaying;
+	public UI_TeamList TeamList;
 	#endregion
 	// Use this for initialization
 	void Start () {
@@ -17,6 +18,9 @@ public class UI_HUDManager : MonoBehaviour {
 		if(Text_CurrentTeamPlaying == null){
 			Debug.LogWarning("CurrentTeamPlaying text object is missing!");
 		}
+		if(TeamList == null){
+			Debug.LogWarning("TeamList object is missing!");
+		}
 	}
 	
 	// Update is called once per frame
@@ -24,11 +28,15 @@ public class UI_HUDManager : MonoBehaviour {
 		
 	}
 
-	public void updateHud(int turnCount, int currentTeamPlaying){
+	public void updateHud(int turnCount, Team team){
+		int currentTeamPlaying = team.teamNumber;
+
 		Text turnCounterText = Text_TurnCounter.GetComponent<Text>();
 		turnCounterText.text = "Turn: " + turnCount;
 
 		Text currentTeamPlayingText = Text_CurrentTeamPlaying.GetComponent<Text>();
-		currentTeamPlayingText.text = "Player " + currentTeamPlaying + "'s Turn"; 
+		currentTeamPlayingText.text = "Player " + currentTeamPlaying + "'s Turn";
+
+		TeamList.resetTeamListForTeam(team);
 	}
 }

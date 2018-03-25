@@ -6,7 +6,6 @@ public class UI_TeamList : MonoBehaviour {
 
 	public GameObject UnitTilePrefab;
 	public Dictionary<Unit, GameObject> unitTileDictionary = new Dictionary<Unit, GameObject>();
-	private List<UI_UnitTile> unitTileList = new List<UI_UnitTile>();
 	
 	 void OnEnable()
     {
@@ -55,6 +54,16 @@ public class UI_TeamList : MonoBehaviour {
 	public void handleUnitRemoved(Unit unit){
 		Debug.Log("A unit has been removed from the team");
 		removeUnitTile(unit);
+	}
+
+	public void resetTeamListForTeam(Team team){
+		foreach(GameObject unitTileObject in unitTileDictionary.Values){
+			Destroy(unitTileObject);
+		}
+		unitTileDictionary = new Dictionary<Unit, GameObject>();
+		foreach(Unit u in team.teamUnitList){
+			addNewUnitTile(u);
+		}
 	}
 
 }

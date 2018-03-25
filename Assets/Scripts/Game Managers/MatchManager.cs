@@ -9,7 +9,7 @@ public class MatchManager : MonoBehaviour {
     #region GAME_STATE
     public int turnNumber = 1;
     public int teamCount = 2;
-    public int teamNumberCurrentlyPlaying = 1;
+    private int teamNumberCurrentlyPlaying = 1;
     Dictionary<int, Team> teamDictionary = new Dictionary<int, Team>();
     #endregion
 
@@ -58,7 +58,6 @@ public class MatchManager : MonoBehaviour {
     }
 
     public Team getTeamByNumber(int teamNumber){
-        Debug.Log(teamDictionary);
         Team currentTeamList;
         teamDictionary.TryGetValue(teamNumber, out currentTeamList);
 
@@ -72,7 +71,8 @@ public class MatchManager : MonoBehaviour {
             ++turnNumber;
         }
         prepareUnitsByTeam(teamNumberCurrentlyPlaying);
-        HUDManager.updateHud(turnNumber, teamNumberCurrentlyPlaying);
+        Team team = getTeamByNumber(teamNumberCurrentlyPlaying);
+        HUDManager.updateHud(turnNumber, team);
 
     }
 
@@ -96,6 +96,7 @@ public class MatchManager : MonoBehaviour {
     }
 
     public void addUnitToTeam(Unit unit){
+        unit.teamNumber = teamNumberCurrentlyPlaying;
         int teamNumber = unit.teamNumber;
         if(teamNumber != null){
             Team team;
@@ -142,8 +143,6 @@ public class MatchManager : MonoBehaviour {
     private void prepareUnitsByTeam(int teamNumber){
         Team team = getTeamByNumber(teamNumber);
         if(team != null){
-            Debug.Log(team.teamNumber);
-            Debug.Log(team.teamUnitList);
             foreach(Unit u in team.teamUnitList){
                 u.prepareUnitForTurn();
             }
