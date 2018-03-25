@@ -75,10 +75,10 @@ public class Unit : MonoBehaviour {
         {
             angle = -angle;
         }
-        Debug.Log(angle);
         transform.Rotate(Vector3.up, angle);
         transform.parent = tile.transform;
         StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, transform.position, tile.transform.position, 0.05f));
+        hasMoved = true;
         disableActionIndicator();
         deselectUnit();
     }
