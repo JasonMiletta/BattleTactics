@@ -20,7 +20,7 @@ public class Util_TransformManipulation {
         yield return null;
     }
 
-    public static IEnumerator smoothMovementCoRoutine(GameObject obj, Vector3 source, Vector3 destination, float duration)
+    public static IEnumerator smoothMovement(GameObject obj, Vector3 source, Vector3 destination, float duration)
     {
         float startTime = Time.time;
         while (Time.time < startTime + duration)

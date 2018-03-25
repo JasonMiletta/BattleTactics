@@ -127,7 +127,7 @@ public class Cursor : MonoBehaviour {
         selectedCursorPrefab.SetActive(true);
 
         Vector3 destination = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
-        StartCoroutine(smoothMovement(transform.position, destination, 0.1f));
+        StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, transform.position, destination, 0.1f));
     }
 
     public void cursorDeselect()
@@ -138,8 +138,9 @@ public class Cursor : MonoBehaviour {
         selectedGridTile = null;
         currentlyHasSelectedTile = false;
         currentlySelectedUnit = null;
+        currentCursorState = CursorState.Empty;
         Vector3 destination = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
-        StartCoroutine(smoothMovement(transform.position, destination, 0.1f));
+        StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, transform.position, destination, 0.1f));
     }
 
     private bool selectCurrentTile()
@@ -147,21 +148,13 @@ public class Cursor : MonoBehaviour {
         if (selectedGridTile == null)
         {
             selectedGridTile = currentHighlightedTile.selectTile();
+            currentCursorState = CursorState.TileSelected;
             currentlySelectedUnit = currentHighlightedTile.getChildUnit();
+            if(currentlySelectedUnit != null){
+                currentCursorState = CursorState.UnitSelected;
+            }
             return true;
         }
         return false;
-    }
-
-    private IEnumerator smoothMovement(Vector3 source, Vector3 destination, float duration)
-    {
-        float startTime = Time.time;
-        while (Time.time < startTime + duration)
-        {
-            transform.position = Vector3.Lerp(source, destination, (Time.time - startTime) / duration);
-            yield return null;
-        }
-        transform.position = destination;
-        yield return null;
     }
 }

@@ -78,7 +78,7 @@ public class Unit : MonoBehaviour {
         Debug.Log(angle);
         transform.Rotate(Vector3.up, angle);
         transform.parent = tile.transform;
-        StartCoroutine(Util_TransformManipulation.smoothMovementCoRoutine(gameObject, transform.position, tile.transform.position, 0.05f));
+        StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, transform.position, tile.transform.position, 0.05f));
         disableActionIndicator();
         deselectUnit();
     }
@@ -148,7 +148,7 @@ public class Unit : MonoBehaviour {
 
     private void enableFloatingAnimation(){
         Vector3 floatAbovePosition = transform.position + new Vector3(0, 0.5f, 0);
-        StartCoroutine(Util_TransformManipulation.smoothMovementCoRoutine(gameObject, transform.position, floatAbovePosition, 0.05f));
+        StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, transform.position, floatAbovePosition, 0.05f));
         if(anim_Floating != null){
             anim_Floating.enableAnimation();
         }
