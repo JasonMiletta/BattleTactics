@@ -114,9 +114,14 @@ public class Cursor : MonoBehaviour {
             {
                 currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
                 cursorDeselect();
+                return;
             } else if (currentHighlightedTile.isAttackable()){
                 currentlySelectedUnit.attackTile(currentHighlightedTile);
                 cursorDeselect();
+                return;
+            } else {
+                cursorDeselect();
+                return;
             }
         }
         else

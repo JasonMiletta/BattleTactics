@@ -23,7 +23,7 @@ public class Unit : MonoBehaviour {
     #endregion
 
     #region UNIT_STATE
-    public int teamNumber = 0;
+    public int teamNumber = 1;
     public bool isEnabled = false;
     private bool hasMoved = false;
     private bool hasAttacked = false;
@@ -121,6 +121,13 @@ public class Unit : MonoBehaviour {
         hasAttacked = true;
         disableActionIndicator();
         deselectUnit();
+        GridTile parentTile = GetComponentInParent<GridTile>();
+        if(parentTile != null){
+            StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, this.transform.position, parentTile.transform.position, 1.0f));
+        } else {
+            Debug.LogError("Couldn't find the parent gridtile for this unit!" + unitName);
+
+        }
     }
     
     //@Description - used to inflict damage to this unit
@@ -160,6 +167,7 @@ public class Unit : MonoBehaviour {
     }
 
     private void enableActionIndicator(){
+        unitStateIndicator.SetActive(true);
          StartCoroutine(Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.25f, 0.25f, 0.25f), 0.5f));
     }
 

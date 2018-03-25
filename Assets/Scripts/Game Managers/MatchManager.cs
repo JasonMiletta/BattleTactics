@@ -58,6 +58,7 @@ public class MatchManager : MonoBehaviour {
     }
 
     public Team getTeamByNumber(int teamNumber){
+        Debug.Log(teamDictionary);
         Team currentTeamList;
         teamDictionary.TryGetValue(teamNumber, out currentTeamList);
 
@@ -76,6 +77,11 @@ public class MatchManager : MonoBehaviour {
     }
 
     public void initializeTeams(){
+        for(int i = 1; i <= teamCount; ++i){
+            if(!teamDictionary.ContainsKey(i)){
+                teamDictionary.Add(i, new Team(i));
+            }
+        }
         foreach(Unit unit in GameObject.FindObjectsOfType<Unit>()){
             int teamNumber = unit.teamNumber;
             Team team;
@@ -136,6 +142,8 @@ public class MatchManager : MonoBehaviour {
     private void prepareUnitsByTeam(int teamNumber){
         Team team = getTeamByNumber(teamNumber);
         if(team != null){
+            Debug.Log(team.teamNumber);
+            Debug.Log(team.teamUnitList);
             foreach(Unit u in team.teamUnitList){
                 u.prepareUnitForTurn();
             }
