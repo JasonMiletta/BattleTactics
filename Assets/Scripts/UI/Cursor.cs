@@ -71,7 +71,6 @@ public class Cursor : MonoBehaviour {
             } else if(Input.GetAxis("Hotkey2") > 0){
                 currentCursorState = CursorState.UnitAction;
                 currentlySelectedUnit.startAttacking();
-                GameObject poof = Resources.Load("Poof") as GameObject;
             }
         }
     }

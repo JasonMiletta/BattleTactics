@@ -9,6 +9,8 @@ public class Unit : MonoBehaviour {
     #region UNIT_COMPONENTS
     public GameObject unitModel;
     public GameObject unitStateIndicator;
+    private Material movementIndicatorMaterial;
+    private Material attackIndicatorMaterial;
     #endregion
     
     #region UNIT_INFO
@@ -30,10 +32,6 @@ public class Unit : MonoBehaviour {
     private bool hasMoved = false;
     private bool hasAttacked = false;
     #endregion
-
-    public Material selectedMaterial;
-
-    private Material originalMaterial;
 
     #region EVENTS
     public delegate void UnitSelectEvent(int xCoor, int yCoor, int moveDistance);
@@ -63,6 +61,9 @@ public class Unit : MonoBehaviour {
             OnUnitCreate(this);
         }
         anim_Floating = GetComponentInChildren<Anim_Floating>();
+
+        movementIndicatorMaterial = Resources.Load("Materials/BlueToon") as Material;
+        attackIndicatorMaterial = Resources.Load("Materials/RedToon") as Material;
 	}
 	
 	// Update is called once per frame
@@ -94,13 +95,14 @@ public class Unit : MonoBehaviour {
         transform.parent = tile.transform;
         StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, transform.position, tile.transform.position, 0.05f));
         hasMoved = true;
-        disableActionIndicator();
+
+        unitStateIndicator.GetComponent<Renderer>().material = attackIndicatorMaterial;
         deselectUnit();
     }
 
     public void selectUnit()
     {
-        if(isEnabled && !hasAttacked && !hasMoved){
+        if(isEnabled && !hasAttacked){
             enableFloatingAnimation();
             GridTile tile = GetComponentInParent<GridTile>();
             if(tile != null && OnUnitSelect != null)
@@ -121,18 +123,22 @@ public class Unit : MonoBehaviour {
     }
 
     public void startMoving(){
-        GridTile tile = GetComponentInParent<GridTile>();
-        if(tile != null && OnUnitMove != null)
-        {
-            OnUnitMove(tile.xCoor, tile.yCoor, moveDistance);
+        if(!hasMoved && !hasAttacked){
+            GridTile tile = GetComponentInParent<GridTile>();
+            if(tile != null && OnUnitMove != null)
+            {
+                OnUnitMove(tile.xCoor, tile.yCoor, moveDistance);
+            }
         }
     }
 
     public void startAttacking(){
-        GridTile tile = GetComponentInParent<GridTile>();
-        if(tile != null && OnUnitAttack != null)
-        {
-            OnUnitAttack(tile.xCoor, tile.yCoor, maxAttackRange);
+        if(!hasAttacked){
+            GridTile tile = GetComponentInParent<GridTile>();
+            if(tile != null && OnUnitAttack != null)
+            {
+                OnUnitAttack(tile.xCoor, tile.yCoor, maxAttackRange);
+            }
         }
     }
 
@@ -174,6 +180,7 @@ public class Unit : MonoBehaviour {
         isEnabled = true;
         hasMoved = false;
         hasAttacked = false;
+        unitStateIndicator.GetComponent<Renderer>().material = movementIndicatorMaterial;
         enableActionIndicator();
     }
 
