@@ -33,11 +33,6 @@ public class Cursor : MonoBehaviour {
             {
                 if (currentlySelectedUnit)
                 {
-                    if(Input.GetAxis("Hotkey1") > 0){
-                        Debug.Log("Hotkey1!");
-                    } else if(Input.GetAxis("Hotkey2") > 0){
-                        Debug.Log("Hotkey2!");
-                    }
                     cursorSelect();
                 }
                 else if (currentlyHasSelectedTile)
@@ -72,8 +67,10 @@ public class Cursor : MonoBehaviour {
         if(currentCursorState == CursorState.UnitSelected){
             if(Input.GetAxis("Hotkey1") > 0){
                 currentCursorState = CursorState.UnitMove;
+                currentlySelectedUnit.startMoving();
             } else if(Input.GetAxis("Hotkey2") > 0){
                 currentCursorState = CursorState.UnitAction;
+                currentlySelectedUnit.startAttacking();
                 GameObject poof = Resources.Load("Poof") as GameObject;
             }
         }

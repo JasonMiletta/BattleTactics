@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour {
 
+    public enum UnitAction {Moving, Attacking, Action};
+
     #region UNIT_COMPONENTS
     public GameObject unitModel;
     public GameObject unitStateIndicator;
@@ -37,6 +39,12 @@ public class Unit : MonoBehaviour {
     public delegate void UnitSelectEvent(int xCoor, int yCoor, int moveDistance);
     public static event UnitSelectEvent OnUnitSelect;
     public static event UnitSelectEvent OnUnitDeselect;
+    
+    public delegate void UnitMoveEvent(int xCoor, int yCoor, int moveDistance);
+    public static event UnitMoveEvent OnUnitMove;
+
+    public delegate void UnitAttackEvent(int xCoor, int yCoor, int moveDistance);
+    public static event UnitAttackEvent OnUnitAttack;
 
     public delegate void UnitCreateEvent(Unit unit);
     public static event UnitCreateEvent OnUnitCreate;
@@ -102,6 +110,22 @@ public class Unit : MonoBehaviour {
         if (tile != null && OnUnitDeselect != null)
         {
             OnUnitDeselect(tile.xCoor, tile.yCoor, moveDistance);
+        }
+    }
+
+    public void startMoving(){
+        GridTile tile = GetComponentInParent<GridTile>();
+        if(tile != null && OnUnitMove != null)
+        {
+            OnUnitMove(tile.xCoor, tile.yCoor, moveDistance);
+        }
+    }
+
+    public void startAttacking(){
+        GridTile tile = GetComponentInParent<GridTile>();
+        if(tile != null && OnUnitAttack != null)
+        {
+            OnUnitAttack(tile.xCoor, tile.yCoor, maxAttackRange);
         }
     }
 
