@@ -77,8 +77,15 @@ public class Unit : MonoBehaviour {
 
     public void moveUnitToGridTile(GridTile tile)
     {
-        float angle = Vector3.Angle(transform.forward, tile.transform.position - transform.position);
-        Vector3 cross = Vector3.Cross(transform.forward, tile.transform.position - transform.position);
+        Vector3 tilePosition = tile.transform.position;
+        Vector3 currentPosition = transform.position;
+
+        //Since we have some floating happening and y values might differ, normalize them
+        tilePosition.y = 0.0f;
+        currentPosition.y = 0.0f;
+        
+        float angle = Vector3.Angle(transform.forward, tilePosition - currentPosition);
+        Vector3 cross = Vector3.Cross(transform.forward, tilePosition - currentPosition);
         if(cross.y < 0)
         {
             angle = -angle;
