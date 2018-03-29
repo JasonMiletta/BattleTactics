@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour {
 
@@ -12,6 +13,9 @@ public class MenuManager : MonoBehaviour {
 	public delegate void PauseMenuEvent();
     public static event PauseMenuEvent OnPauseMenuDisplay;
     public static event PauseMenuEvent OnPauseMenuHide;
+	#endregion
+
+	#region STATE
 	#endregion
 	// Use this for initialization
 	void Start () {
@@ -35,7 +39,7 @@ public class MenuManager : MonoBehaviour {
 
 	}
 	public void quitToMenu(){
-
+		SceneManager.LoadScene("MainMenu");
 	}
 	public void quitToDesktop(){
 		Application.Quit();
