@@ -5,7 +5,7 @@ using UnityEngine;
 public class MenuManager : MonoBehaviour {
 
 	#region COMPONENTS
-	GameObject Menu;
+	public GameObject Menu;
 	#endregion
 
 	#region EVENTS
@@ -50,11 +50,15 @@ public class MenuManager : MonoBehaviour {
 	}
 	private void showMenu(){
 		Menu.SetActive(true);
-		OnPauseMenuDisplay();
+		if(OnPauseMenuDisplay != null){
+			OnPauseMenuDisplay();
+		}
 	}
 
 	private void hideMenu(){
 		Menu.SetActive(false);
-		OnPauseMenuHide();
+		if(OnPauseMenuHide != null){
+			OnPauseMenuHide();
+		}
 	}
 }

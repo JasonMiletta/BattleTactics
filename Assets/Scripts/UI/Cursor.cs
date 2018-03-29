@@ -13,8 +13,18 @@ public class Cursor : MonoBehaviour {
 
     private bool currentlyHasSelectedTile = false;
     private Unit currentlySelectedUnit;
-
+    private bool isInputEnabled = true;
     public Unit testUnit;
+
+    void OnEnable(){
+        MenuManager.OnPauseMenuDisplay += disableInput;
+        MenuManager.OnPauseMenuHide += enableInput;
+    }
+
+    void OnDisable(){
+        MenuManager.OnPauseMenuDisplay -= disableInput;
+        MenuManager.OnPauseMenuHide -= enableInput;
+    }
 
     // Use this for initialization
     void Start () {
@@ -25,52 +35,54 @@ public class Cursor : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        updateCursorPosition();
-        EventSystem eventSystem = FindObjectOfType<EventSystem>();
-        if (!eventSystem.IsPointerOverGameObject())
-        {
-            if (Input.GetMouseButtonDown(0))
+        if(isInputEnabled){
+            updateCursorPosition();
+            EventSystem eventSystem = FindObjectOfType<EventSystem>();
+            if (!eventSystem.IsPointerOverGameObject())
             {
-                if (currentlySelectedUnit)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    cursorSelect();
+                    if (currentlySelectedUnit)
+                    {
+                        cursorSelect();
+                    }
+                    else if (currentlyHasSelectedTile)
+                    {
+                        cursorDeselect();
+                    }
+                    else
+                    {
+                        cursorSelect();
+                    }
                 }
-                else if (currentlyHasSelectedTile)
+            }
+
+            //DEBUG
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (selectedGridTile != null)
                 {
                     cursorDeselect();
                 }
-                else
+            }
+
+            if(Input.GetKeyDown(KeyCode.X)){
+                if (selectedGridTile != null){
+                    createTestUnitOnTile();
+                } else 
                 {
-                    cursorSelect();
+                    cursorDeselect();
                 }
             }
-        }
 
-        //DEBUG
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (selectedGridTile != null)
-            {
-                cursorDeselect();
-            }
-        }
-
-        if(Input.GetKeyDown(KeyCode.X)){
-            if (selectedGridTile != null){
-                createTestUnitOnTile();
-            } else 
-            {
-                cursorDeselect();
-            }
-        }
-
-        if(currentCursorState == CursorState.UnitSelected){
-            if(Input.GetAxis("Hotkey1") > 0){
-                currentCursorState = CursorState.UnitMove;
-                currentlySelectedUnit.startMoving();
-            } else if(Input.GetAxis("Hotkey2") > 0){
-                currentCursorState = CursorState.UnitAction;
-                currentlySelectedUnit.startAttacking();
+            if(currentCursorState == CursorState.UnitSelected){
+                if(Input.GetAxis("Hotkey1") > 0){
+                    currentCursorState = CursorState.UnitMove;
+                    currentlySelectedUnit.startMoving();
+                } else if(Input.GetAxis("Hotkey2") > 0){
+                    currentCursorState = CursorState.UnitAction;
+                    currentlySelectedUnit.startAttacking();
+                }
             }
         }
     }
@@ -157,5 +169,13 @@ public class Cursor : MonoBehaviour {
             return true;
         }
         return false;
+    }
+
+    private void disableInput(){
+        isInputEnabled = false;
+    }
+    
+    private void enableInput(){
+        isInputEnabled = true;
     }
 }
