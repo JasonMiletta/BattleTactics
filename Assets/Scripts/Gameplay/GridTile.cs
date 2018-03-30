@@ -23,6 +23,12 @@ public class GridTile : MonoBehaviour {
 
     private bool tileIsChanging = false;
 
+    #region EVENTS
+    public delegate void TileSelectEvent(GridTile tile);
+    public static event TileSelectEvent OnTileSelect;
+    public static event TileSelectEvent OnTileDeselect;
+    #endregion
+
 	// Use this for initialization
 	void Start ()
     {
@@ -39,7 +45,7 @@ public class GridTile : MonoBehaviour {
 
     public GridTile selectTile()
     {
-        //tile.GetComponent<Renderer>().material = Resources.Load("Selected") as Material;
+        OnTileSelect(this);
         Unit unit = GetComponentInChildren<Unit>();
         if(unit != null)
         {
@@ -50,7 +56,7 @@ public class GridTile : MonoBehaviour {
 
     public void deSelectTile()
     {
-        //tile.GetComponent<Renderer>().material = originalTileMaterial;
+        OnTileDeselect(this);
         Unit unit = GetComponentInChildren<Unit>();
         if (unit != null)
         {
