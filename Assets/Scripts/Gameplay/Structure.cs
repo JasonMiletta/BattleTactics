@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#region 
 public class Structure : MonoBehaviour {
 
 	public enum StructureType {City, Capitol, Barracks, Airstrip, Dock};
@@ -29,6 +28,7 @@ public class Structure : MonoBehaviour {
 	public static event StructureEvent OnStructureCaptured;
 	public static event StructureEvent OnStructureDestroyed;
 	#endregion
+	
 	// Use this for initialization
 	void Start () {
 		
