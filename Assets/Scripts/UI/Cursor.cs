@@ -15,6 +15,7 @@ public class Cursor : MonoBehaviour {
     private Unit currentlySelectedUnit;
     private bool isInputEnabled = true;
     public Unit testUnit;
+    public Structure testStructure;
 
     void OnEnable(){
         MenuManager.OnPauseMenuDisplay += disableInput;
@@ -57,7 +58,6 @@ public class Cursor : MonoBehaviour {
                 }
             }
 
-            //DEBUG
             if (Input.GetMouseButtonDown(1))
             {
                 if (selectedGridTile != null)
@@ -66,6 +66,7 @@ public class Cursor : MonoBehaviour {
                 }
             }
 
+            #region DEBUG
             if(Input.GetKeyDown(KeyCode.X)){
                 if (selectedGridTile != null){
                     createTestUnitOnTile();
@@ -74,6 +75,14 @@ public class Cursor : MonoBehaviour {
                     cursorDeselect();
                 }
             }
+            if(Input.GetKeyDown(KeyCode.Z)){
+                if(selectedGridTile != null){
+                    createTestStructureOnTile();
+                } else {
+                    cursorDeselect();
+                }
+            }
+            #endregion
 
             if(currentCursorState == CursorState.UnitSelected){
                 if(Input.GetAxis("Hotkey1") > 0){
@@ -92,6 +101,11 @@ public class Cursor : MonoBehaviour {
     {
         Transform gridTransform = selectedGridTile.transform;
         Unit newUnit = Instantiate<Unit>(testUnit, gridTransform.position, gridTransform.rotation, gridTransform);
+        cursorDeselect();
+    }
+    public void createTestStructureOnTile(){
+        Transform gridTransform = selectedGridTile.transform;
+        Structure newStructure = Instantiate<Structure>(testStructure, gridTransform.position, gridTransform.rotation, gridTransform);
         cursorDeselect();
     }
 
