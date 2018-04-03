@@ -8,6 +8,9 @@ public class UI_TilePreviewController : MonoBehaviour {
 	public Camera previewCamera;
 	#endregion
 
+	#region PARAMETER
+	public Vector3 positionOffset = new Vector3(0.0f, 1.0f, -1.0f);
+	#endregion
 	void OnEnable(){
 		GridTile.OnTileSelect += handleTileSelectedEvent;
 		GridTile.OnTileDeselect += handleTileDeselectedEvent;
@@ -36,7 +39,8 @@ public class UI_TilePreviewController : MonoBehaviour {
 	}
 
 	private void handleTileSelectedEvent(GridTile tile){
-		previewCamera.gameObject.transform.position = tile.transform.position;
+		previewCamera.gameObject.transform.position = tile.transform.position + positionOffset;
+		previewCamera.gameObject.transform.LookAt(tile.transform);
 		previewCamera.gameObject.SetActive(true);
 		Debug.Log("Camera Active!");
 	}
