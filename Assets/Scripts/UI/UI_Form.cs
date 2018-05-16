@@ -55,8 +55,6 @@ public class UI_Form : MonoBehaviour {
 			StartCoroutine(Util_TransformManipulation.lerpObjToScale(child, Vector3.zero, 0.5f));
 			++awaitingFormCount;
 		}
-		//TODO: We need to capture when all of the children are inactive and set this to inactive.
-		// Alternatively handle this menu UIForm staying active for enabling/disabling
 	}
 
 	private void handleOnLerpComplete(){
