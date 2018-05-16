@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Util_TransformManipulation {
 
+    #region EVENTS
+    public delegate void LerpEvent();
+    public static event LerpEvent OnLerpBegin;
+    public static event LerpEvent OnLerpComplete;
+    #endregion
+
 	public static IEnumerator lerpObjToScale(GameObject obj, Vector3 targetScale, float duration)
     {
         float startTime = Time.time;
@@ -17,7 +23,7 @@ public class Util_TransformManipulation {
         {
             obj.SetActive(false);
         }
-        yield return null;
+        OnLerpComplete();
     }
 
     public static IEnumerator smoothMovement(GameObject obj, Vector3 source, Vector3 destination, float duration)

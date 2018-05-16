@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour {
 
 	#region COMPONENTS
-	public GameObject Menu;
+	public UI_Form Menu;
 	#endregion
 
 	#region EVENTS
@@ -46,21 +46,21 @@ public class MenuManager : MonoBehaviour {
 	}
 
 	private void toggleMenu(){
-		if(!Menu.activeSelf){
+		if(!Menu.gameObject.activeSelf){
 			showMenu();
 		} else {
 			hideMenu();
 		}
 	}
 	private void showMenu(){
-		Menu.SetActive(true);
+		Menu.activateForm();
 		if(OnPauseMenuDisplay != null){
 			OnPauseMenuDisplay();
 		}
 	}
 
 	private void hideMenu(){
-		Menu.SetActive(false);
+		Menu.deactivateForm();
 		if(OnPauseMenuHide != null){
 			OnPauseMenuHide();
 		}

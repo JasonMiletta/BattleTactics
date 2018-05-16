@@ -13,10 +13,17 @@ public class UI_Form : MonoBehaviour {
 	List<GameObject> children = new List<GameObject>();
 	#endregion
 
+	#region STATE
+	private bool isFormChanging = false;
+	private int awaitingFormCount = 0;
+	#endregion
+
 	void OnEnable(){
+		Util_TransformManipulation.OnLerpComplete += handleOnLerpComplete;
 	}
 
 	void OnDisable(){
+		Util_TransformManipulation.OnLerpComplete -= handleOnLerpComplete;
 	}
 
 	// Use this for initialization
@@ -30,21 +37,36 @@ public class UI_Form : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+		
 	}
 
 	public void activateForm(){
 		gameObject.SetActive(true);
 		foreach(GameObject child in children){
+			child.SetActive(true);
 			StartCoroutine(Util_TransformManipulation.lerpObjToScale(child, MaxScale, 0.5f));
 		}
 		
 	}
 
 	public void deactivateForm(){
+		isFormChanging = true;
 		foreach(GameObject child in children){
 			StartCoroutine(Util_TransformManipulation.lerpObjToScale(child, Vector3.zero, 0.5f));
+			++awaitingFormCount;
 		}
 		//TODO: We need to capture when all of the children are inactive and set this to inactive.
 		// Alternatively handle this menu UIForm staying active for enabling/disabling
+	}
+
+	private void handleOnLerpComplete(){
+		if(isFormChanging){
+			--awaitingFormCount;
+			if(awaitingFormCount <= 0){
+				awaitingFormCount = 0;
+				isFormChanging = false;
+				gameObject.SetActive(false);
+			}
+		}
 	}
 }
