@@ -6,16 +6,25 @@ using UnityEngine.UI;
 
 public class Cursor : MonoBehaviour {
     public enum CursorState {Empty, TileSelected, UnitSelected, UnitMove, UnitAction};
+
+    #region COMPONENTS
     public GridTile selectedGridTile;
     public GridTile currentHighlightedTile;
     public GameObject selectedCursorPrefab;
+    #endregion
+
+    #region STATE
     public CursorState currentCursorState = CursorState.Empty;
 
     private bool currentlyHasSelectedTile = false;
     private Unit currentlySelectedUnit;
     private bool isInputEnabled = true;
+    #endregion
+
+    #region DEBUG
     public Unit testUnit;
     public Structure testStructure;
+    #endregion
 
     void OnEnable(){
         MenuManager.OnPauseMenuDisplay += disableInput;
