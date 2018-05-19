@@ -22,7 +22,7 @@ public class MenuManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if(Menu == null){
-			Debug.LogError("No Error is attached to the Menu Manager!");
+			Debug.LogError("No Menu Form is attached to the Menu Manager!");
 		}
 	}
 	
