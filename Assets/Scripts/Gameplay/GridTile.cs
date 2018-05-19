@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridTile : MonoBehaviour {
 
-    public enum tileType {Blank, Tree, Grass, Boulder};
+    public enum tileType {Blank, Tree, Grass, Boulder, Plain};
 
     public tileType currentTileType;
     public GameObject[] tilePrefabs;
@@ -45,7 +45,9 @@ public class GridTile : MonoBehaviour {
 
     public GridTile selectTile()
     {
-        OnTileSelect(this);
+        if(OnTileSelect != null){
+            OnTileSelect(this);
+        }
         Unit unit = GetComponentInChildren<Unit>();
         if(unit != null)
         {
@@ -56,7 +58,9 @@ public class GridTile : MonoBehaviour {
 
     public void deSelectTile()
     {
-        OnTileDeselect(this);
+        if(OnTileDeselect != null){
+            OnTileDeselect(this);
+        }
         Unit unit = GetComponentInChildren<Unit>();
         if (unit != null)
         {
@@ -150,8 +154,13 @@ public class GridTile : MonoBehaviour {
                 prefabsOfMatchingTiles.Add(prefab);
             }
         }
-        var randomIndex = Random.Range(0, prefabsOfMatchingTiles.Count);
-        return (GameObject)prefabsOfMatchingTiles[randomIndex];
+        if(prefabsOfMatchingTiles.Count == 0){
+            Debug.LogWarning("Ensure that the prefab for tile type: " + tileTypeName + " has been added to the tilePrefabs list");
+        } else {
+            var randomIndex = Random.Range(0, prefabsOfMatchingTiles.Count);
+            return (GameObject)prefabsOfMatchingTiles[randomIndex];
+        }
+        return null;
     }
 
     private tileType getTileTypeByName(string tileTypeName)

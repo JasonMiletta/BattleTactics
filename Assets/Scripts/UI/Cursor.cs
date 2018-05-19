@@ -170,7 +170,9 @@ public class Cursor : MonoBehaviour {
     {
         //Set highlighter to inactive
         selectedCursorPrefab.SetActive(false);
-        selectedGridTile.deSelectTile();
+        if(selectedGridTile != null){
+            selectedGridTile.deSelectTile();
+        }
         selectedGridTile = null;
         currentlyHasSelectedTile = false;
         currentlySelectedUnit = null;

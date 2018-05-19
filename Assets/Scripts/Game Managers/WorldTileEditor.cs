@@ -40,6 +40,11 @@ public class WorldTileEditor : MonoBehaviour {
         cursor.cursorDeselect();
     }
 
+    public void spawnBuildingOnTile(){
+        cursor.createTestStructureOnTile();
+        cursor.cursorDeselect();
+    }
+
     public void promptForSaving()
     {
         currentAction = action.Saving;
