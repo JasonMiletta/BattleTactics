@@ -5,6 +5,9 @@ using UnityEngine;
 public class WorldTileMap : MonoBehaviour {
 
     [SerializeField]
+    private PrefabDataTable UTIL;
+
+    [SerializeField]
     public GameObject[,] grid;
     public float width = 10;
     public float height = 10;
@@ -104,6 +107,16 @@ public class WorldTileMap : MonoBehaviour {
         gridTile.enableTile();
 
         return newGridTile;
+    }
+
+    private GameObject placeUnitOrStructureOnTile(GameObject tile, int xCoor, int yCoor, string unitStructureName){
+        Vector3 spawnPosition = new Vector3(xCoor, 0, yCoor);
+        GameObject unitStructurePrefab = UTIL.getPrefabByName(unitStructureName);
+        if(unitStructurePrefab != null){
+            GameObject newUnitStructure = Instantiate(unitStructurePrefab, spawnPosition, this.transform.rotation, this.transform);
+            return newUnitStructure;
+        }
+        return null;
     }
 
 }

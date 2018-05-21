@@ -58,15 +58,22 @@ public class WorldJsonUtility : MonoBehaviour {
                 GridTile tileComponent = gridGameObject.GetComponent<GridTile>();
                 Debug.Log(tileComponent.currentTileType);
                 TileJSONWrapper tileWrapper = new TileJSONWrapper(tileComponent.currentTileType, i, j);
-                tileList.list.Add(tileWrapper);
 
                 //Get Unit data
                 Unit unit = gridGameObject.GetComponentInChildren<Unit>();
-                Debug.Log(unit);
+                if(unit != null){
+                    Debug.Log(unit);
+                    tileWrapper.tileUnitStructureName = unit.name;
+                }
 
                 //Get Structure data
                 Structure structure = gridGameObject.GetComponentInChildren<Structure>();
-                Debug.Log(structure);
+                if(structure != null){
+                    Debug.Log(structure);
+                    tileWrapper.tileUnitStructureName = structure.name;
+                }
+                
+                tileList.list.Add(tileWrapper);
             }
         }
 
@@ -135,12 +142,21 @@ public class WorldJsonUtility : MonoBehaviour {
         public GridTile.tileType tileType;
         public int xCoor;
         public int yCoor;
+        public string tileUnitStructureName;
 
         public TileJSONWrapper(GridTile.tileType type, int x, int y)
         {
             tileType = type;
             xCoor = x;
             yCoor = y;
+        }
+
+        public TileJSONWrapper(GridTile.tileType type, int x, int y, string unitStructureName)
+        {
+            tileType = type;
+            xCoor = x;
+            yCoor = y;
+            tileUnitStructureName = unitStructureName;
         }
 
     }

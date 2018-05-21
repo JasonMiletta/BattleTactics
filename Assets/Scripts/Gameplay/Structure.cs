@@ -11,6 +11,7 @@ public class Structure : MonoBehaviour {
 	#endregion
 
 	#region STATS
+	public string structureName;
 	public StructureType type = StructureType.City;
 	public int totalHealth = 5;
 	#endregion
