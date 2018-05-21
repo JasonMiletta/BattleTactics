@@ -52,10 +52,21 @@ public class WorldJsonUtility : MonoBehaviour {
         {
             for (var j = 0; j < height; ++j)
             {
-                GridTile tileComponent = gridArray[i, j].GetComponent<GridTile>();
+                GameObject gridGameObject = gridArray[i, j];
+
+                //Get Grid data
+                GridTile tileComponent = gridGameObject.GetComponent<GridTile>();
                 Debug.Log(tileComponent.currentTileType);
                 TileJSONWrapper tileWrapper = new TileJSONWrapper(tileComponent.currentTileType, i, j);
                 tileList.list.Add(tileWrapper);
+
+                //Get Unit data
+                Unit unit = gridGameObject.GetComponentInChildren<Unit>();
+                Debug.Log(unit);
+
+                //Get Structure data
+                Structure structure = gridGameObject.GetComponentInChildren<Structure>();
+                Debug.Log(structure);
             }
         }
 
@@ -132,6 +143,30 @@ public class WorldJsonUtility : MonoBehaviour {
             yCoor = y;
         }
 
+    }
+
+    [Serializable]
+    public class UnitJSONWrapper
+    {
+        public int xCoor;
+        public int yCoor;
+
+        public UnitJSONWrapper(int x, int y){
+            xCoor = x;
+            yCoor = y;
+        }
+    }
+
+    [Serializable]
+    public class StructureJSONWrapper
+    {
+        public int xCoor;
+        public int yCoor;
+
+        public StructureJSONWrapper(int x, int y){
+            xCoor = x;
+            yCoor = y;
+        }
     }
     #endregion
 }
