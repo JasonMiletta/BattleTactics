@@ -8,6 +8,10 @@ public class WorldTileEditor : MonoBehaviour {
 
     public enum action { None, Saving, Loading };
 
+    #region COMPONENTS
+    public RTS_Cam.RTS_Camera mainCamera;
+    #endregion
+
     public action currentAction = action.None;
     public Cursor cursor;
     public WorldTileMap worldMap;
@@ -66,12 +70,24 @@ public class WorldTileEditor : MonoBehaviour {
 
     private void toggleSavePrompt()
     {
-        savePrompt.SetActive(!savePrompt.activeSelf);
+        if(savePrompt.activeSelf){
+            savePrompt.SetActive(false);
+            mainCamera.enabled = true;
+        } else {
+            savePrompt.SetActive(true);
+            mainCamera.enabled = false;
+        }
     }
     
     private void toggleLevelSelection()
     {
-        loadSelect.SetActive(!loadSelect.activeSelf);
+        if(loadSelect.activeSelf){
+            loadSelect.SetActive(false);
+            mainCamera.enabled = true;
+        } else {
+            loadSelect.SetActive(true);
+            mainCamera.enabled = false;
+        }
     }
 
     public void loadLevel()
@@ -90,7 +106,7 @@ public class WorldTileEditor : MonoBehaviour {
         //Properly initialize it into the game
         worldMap.updateMapFromJsonWrapper(newMapWrapper);
 
-        loadSelect.SetActive(false);
+        toggleLevelSelection();
         currentAction = action.None;
     }
     
