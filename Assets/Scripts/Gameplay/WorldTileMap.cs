@@ -17,6 +17,9 @@ public class WorldTileMap : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        if(UTIL == null){
+            Debug.LogError("ERROR: Reference to UTIL PrefabDataTable has not been set!");
+        }
         if (levelName != null)
         {
             //Create the new one from WorldJsonUtility
@@ -34,20 +37,6 @@ public class WorldTileMap : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            if (width > 0 && height > 0 && grid[0, 0] != null)
-            {
-                foreach (GameObject obj in grid)
-                {
-                    Destroy(obj);
-                }
-            }
-            else
-            {
-                createGrid();
-            }
-        }
 
     }
 
@@ -91,6 +80,12 @@ public class WorldTileMap : MonoBehaviour {
 
             GameObject newGridTile = this.createNewGridTile(tileWrapper.tileType, x, y);
             this.grid[x, y] = newGridTile;
+
+            if(tileWrapper.tileUnitName != null && tileWrapper.tileUnitName != ""){
+                placeUnitOrStructureOnTile(newGridTile, x, y, tileWrapper.tileUnitName);
+            } else if(tileWrapper.tileStructureName != null && tileWrapper.tileStructureName != ""){
+                placeUnitOrStructureOnTile(newGridTile, x, y, tileWrapper.tileStructureName);
+            }
         }
     }
 
@@ -113,7 +108,7 @@ public class WorldTileMap : MonoBehaviour {
         Vector3 spawnPosition = new Vector3(xCoor, 0, yCoor);
         GameObject unitStructurePrefab = UTIL.getPrefabByName(unitStructureName);
         if(unitStructurePrefab != null){
-            GameObject newUnitStructure = Instantiate(unitStructurePrefab, spawnPosition, this.transform.rotation, this.transform);
+            GameObject newUnitStructure = Instantiate(unitStructurePrefab, spawnPosition, tile.transform.rotation, tile.transform);
             return newUnitStructure;
         }
         return null;
