@@ -39,10 +39,10 @@ public class Unit : MonoBehaviour {
     public static event UnitSelectEvent OnUnitDeselect;
     
     public delegate void UnitMoveEvent(int xCoor, int yCoor, int moveDistance);
-    public static event UnitMoveEvent OnUnitMove;
+    public static event UnitMoveEvent OnUnitMoving;
 
     public delegate void UnitAttackEvent(int xCoor, int yCoor, int moveDistance);
-    public static event UnitAttackEvent OnUnitAttack;
+    public static event UnitAttackEvent OnUnitAttacking;
 
     public delegate void UnitCreateEvent(Unit unit);
     public static event UnitCreateEvent OnUnitCreate;
@@ -102,12 +102,20 @@ public class Unit : MonoBehaviour {
 
     public void selectUnit()
     {
-        if(isEnabled && !hasAttacked){
+        Debug.Log("Selected Unit");
+        Debug.Log(this);
+        if(isEnabled){
             enableFloatingAnimation();
-            GridTile tile = GetComponentInParent<GridTile>();
-            if(tile != null && OnUnitSelect != null)
-            {
-                OnUnitSelect(tile.xCoor, tile.yCoor, moveDistance);
+            if(!hasMoved){
+                startMoving();
+            } else if(!hasAttacked){
+                startAttacking();
+            }   else {
+                GridTile tile = GetComponentInParent<GridTile>();
+                if(tile != null && OnUnitSelect != null)
+                {
+                    OnUnitSelect(tile.xCoor, tile.yCoor, moveDistance);
+                }
             }
         }
     }
@@ -125,9 +133,9 @@ public class Unit : MonoBehaviour {
     public void startMoving(){
         if(!hasMoved && !hasAttacked){
             GridTile tile = GetComponentInParent<GridTile>();
-            if(tile != null && OnUnitMove != null)
+            if(tile != null && OnUnitMoving != null)
             {
-                OnUnitMove(tile.xCoor, tile.yCoor, moveDistance);
+                OnUnitMoving(tile.xCoor, tile.yCoor, moveDistance);
             }
         }
     }
@@ -135,9 +143,9 @@ public class Unit : MonoBehaviour {
     public void startAttacking(){
         if(!hasAttacked){
             GridTile tile = GetComponentInParent<GridTile>();
-            if(tile != null && OnUnitAttack != null)
+            if(tile != null && OnUnitAttacking != null)
             {
-                OnUnitAttack(tile.xCoor, tile.yCoor, maxAttackRange);
+                OnUnitAttacking(tile.xCoor, tile.yCoor, maxAttackRange);
             }
         }
     }

@@ -12,18 +12,16 @@ public class UnitMoveOverlayManager : MonoBehaviour {
 
     void OnEnable()
     {
-        //Unit.OnUnitSelect += displayAttackMoveOverlays;
         Unit.OnUnitDeselect += disableAttackMoveOverlays;
-        Unit.OnUnitMove += displayMoveOverlays;
-        Unit.OnUnitAttack += displayAttackOverlays;
+        Unit.OnUnitMoving += displayMoveOverlays;
+        Unit.OnUnitAttacking += displayAttackOverlays;
     }
 
     void OnDisable()
     {
-        //Unit.OnUnitSelect -= displayAttackMoveOverlays;
         Unit.OnUnitDeselect -= disableAttackMoveOverlays;
-        Unit.OnUnitMove -= displayMoveOverlays;
-        Unit.OnUnitAttack -= displayAttackOverlays;
+        Unit.OnUnitMoving -= displayMoveOverlays;
+        Unit.OnUnitAttacking -= displayAttackOverlays;
     }
 
     // Use this for initialization
