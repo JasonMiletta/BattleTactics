@@ -29,11 +29,15 @@ public class Team {
 
     public void addUnit(Unit u){
         teamUnitList.Add(u);
-        OnUnitAdded(u);
+        if(OnUnitAdded != null){
+            OnUnitAdded(u);
+        }
     }
 
     public void removeUnit(Unit u){
         teamUnitList.Remove(u);
-        OnUnitRemoved(u);
+        if(OnUnitRemoved != null){
+            OnUnitRemoved(u);
+        }
     }
 }
