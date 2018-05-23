@@ -82,9 +82,9 @@ public class WorldTileMap : MonoBehaviour {
             this.grid[x, y] = newGridTile;
 
             if(tileWrapper.tileUnitName != null && tileWrapper.tileUnitName != ""){
-                placeUnitOrStructureOnTile(newGridTile, x, y, tileWrapper.tileUnitName);
+                placeUnitOrStructureOnTile(newGridTile, x, y, tileWrapper.tileUnitName, tileWrapper.teamNumber);
             } else if(tileWrapper.tileStructureName != null && tileWrapper.tileStructureName != ""){
-                placeUnitOrStructureOnTile(newGridTile, x, y, tileWrapper.tileStructureName);
+                placeUnitOrStructureOnTile(newGridTile, x, y, tileWrapper.tileStructureName, tileWrapper.teamNumber);
             }
         }
     }
@@ -104,11 +104,21 @@ public class WorldTileMap : MonoBehaviour {
         return newGridTile;
     }
 
-    private GameObject placeUnitOrStructureOnTile(GameObject tile, int xCoor, int yCoor, string unitStructureName){
+    private GameObject placeUnitOrStructureOnTile(GameObject tile, int xCoor, int yCoor, string unitStructureName, int teamNumber){
         Vector3 spawnPosition = new Vector3(xCoor, 0, yCoor);
         GameObject unitStructurePrefab = UTIL.getPrefabByName(unitStructureName);
+        
         if(unitStructurePrefab != null){
             GameObject newUnitStructure = Instantiate(unitStructurePrefab, spawnPosition, tile.transform.rotation, tile.transform);
+            Unit unit = newUnitStructure.GetComponent<Unit>();
+            if(unit != null){
+                unit.teamNumber = teamNumber;
+            } else {
+                Structure structure = newUnitStructure.GetComponent<Structure>();
+                if(structure != null){
+                    structure.teamNumber = teamNumber;
+                }
+            }
             return newUnitStructure;
         }
         return null;

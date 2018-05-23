@@ -63,14 +63,14 @@ public class WorldJsonUtility : MonoBehaviour {
                 Unit unit = gridGameObject.GetComponentInChildren<Unit>();
                 if(unit != null){
                     Debug.Log(unit);
-                    tileWrapper.tileUnitName = unit.unitName;
+                    tileWrapper.setUnitForTile(unit.unitName, unit.teamNumber);
                 }
 
                 //Get Structure data
                 Structure structure = gridGameObject.GetComponentInChildren<Structure>();
                 if(structure != null){
                     Debug.Log(structure);
-                    tileWrapper.tileStructureName = structure.structureName;
+                    tileWrapper.setStructureForTile(structure.structureName, structure.teamNumber);
                 }
                 
                 tileList.list.Add(tileWrapper);
@@ -144,12 +144,23 @@ public class WorldJsonUtility : MonoBehaviour {
         public int yCoor;
         public string tileUnitName;
         public string tileStructureName;
+        public int teamNumber;
 
         public TileJSONWrapper(GridTile.tileType type, int x, int y)
         {
             tileType = type;
             xCoor = x;
             yCoor = y;
+        }
+
+        public void setUnitForTile(string unitName, int teamNumber){
+            tileUnitName = unitName;
+            this.teamNumber = teamNumber;   
+        }
+
+        public void setStructureForTile(string structureName, int teamNumber){
+            tileStructureName = structureName;
+            this.teamNumber = teamNumber;
         }
     }
 
