@@ -102,8 +102,6 @@ public class Unit : MonoBehaviour {
 
     public void selectUnit()
     {
-        Debug.Log("Selected Unit");
-        Debug.Log(this);
         if(isEnabled){
             enableFloatingAnimation();
             if(!hasMoved){
