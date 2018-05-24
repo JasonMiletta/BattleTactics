@@ -1,20 +1,65 @@
 fileFormatVersion: 2
-guid: 1f9526124e43f084896125f607fb3e96
+guid: 521cce2199585c449a9ffce9a8b13fd9
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: default
-    100002: //RootNode
-    400000: default
-    400002: //RootNode
-    2100000: _defaultMat
-    2100002: blueSteel
-    2100004: glass
+    100000: 01 RocketPod_81
+    100002: 01 Tank Body Back 02_60
+    100004: 01 Tank Body Front 02_59
+    100006: 01 Tank Body Front 04_86
+    100008: 01 Tank Body Track cover 02_74
+    100010: 01 Tank Body Track cover 02_75
+    100012: 01 Tank Body Tracks 02_72
+    100014: 01 Tank Body Tracks 02_73
+    100016: 01 Tank Body turret 01_80
+    100018: 03 engine 01_87
+    100020: //RootNode
+    400000: 01 RocketPod_81
+    400002: 01 Tank Body Back 02_60
+    400004: 01 Tank Body Front 02_59
+    400006: 01 Tank Body Front 04_86
+    400008: 01 Tank Body Track cover 02_74
+    400010: 01 Tank Body Track cover 02_75
+    400012: 01 Tank Body Tracks 02_72
+    400014: 01 Tank Body Tracks 02_73
+    400016: 01 Tank Body turret 01_80
+    400018: 03 engine 01_87
+    400020: //RootNode
+    2100000: blueSteel
+    2100002: glass
+    2100004: _defaultMat
     2100006: orangeSteel
-    2100008: tire
-    2300000: default
-    3300000: default
-    4300000: default
+    2100008: None
+    2300000: 01 RocketPod_81
+    2300002: 01 Tank Body Back 02_60
+    2300004: 01 Tank Body Front 02_59
+    2300006: 01 Tank Body Front 04_86
+    2300008: 01 Tank Body Track cover 02_74
+    2300010: 01 Tank Body Track cover 02_75
+    2300012: 01 Tank Body Tracks 02_72
+    2300014: 01 Tank Body Tracks 02_73
+    2300016: 01 Tank Body turret 01_80
+    2300018: 03 engine 01_87
+    3300000: 01 RocketPod_81
+    3300002: 01 Tank Body Back 02_60
+    3300004: 01 Tank Body Front 02_59
+    3300006: 01 Tank Body Front 04_86
+    3300008: 01 Tank Body Track cover 02_74
+    3300010: 01 Tank Body Track cover 02_75
+    3300012: 01 Tank Body Tracks 02_72
+    3300014: 01 Tank Body Tracks 02_73
+    3300016: 01 Tank Body turret 01_80
+    3300018: 03 engine 01_87
+    4300000: 01 Tank Body Front 02_59
+    4300002: 01 Tank Body Back 02_60
+    4300004: 01 Tank Body Tracks 02_72
+    4300006: 01 Tank Body Tracks 02_73
+    4300008: 01 Tank Body Track cover 02_74
+    4300010: 01 Tank Body Track cover 02_75
+    4300012: 01 Tank Body turret 01_80
+    4300014: 01 RocketPod_81
+    4300016: 01 Tank Body Front 04_86
+    4300018: 03 engine 01_87
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -46,7 +91,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.25
+    globalScale: 0.03
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
