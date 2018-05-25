@@ -23,7 +23,9 @@ public class Util_TransformManipulation {
         {
             obj.SetActive(false);
         }
-        OnLerpComplete();
+        if(OnLerpComplete != null){
+            OnLerpComplete();
+        }
     }
 
     public static IEnumerator smoothMovement(GameObject obj, Vector3 source, Vector3 destination, float duration)
