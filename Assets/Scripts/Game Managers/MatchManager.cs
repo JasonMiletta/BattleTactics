@@ -48,6 +48,7 @@ public class MatchManager : MonoBehaviour {
 
     public void startLevel(){
         initializeTeams();
+        prepareUnitsByTeam(1);
     }
 
     public int getCurrentTurnNumber(){
@@ -77,10 +78,9 @@ public class MatchManager : MonoBehaviour {
     }
 
     public void initializeTeams(){
-        for(int i = 1; i <= teamCount; ++i){
-            if(!teamDictionary.ContainsKey(i)){
-                teamDictionary.Add(i, new Team(i));
-            }
+        teamDictionary = new Dictionary<int, Team>();
+        for(int i = 0; i <= teamCount; ++i){
+            teamDictionary.Add(i, new Team(i));
         }
         foreach(Unit unit in GameObject.FindObjectsOfType<Unit>()){
             int teamNumber = unit.teamNumber;
@@ -98,28 +98,24 @@ public class MatchManager : MonoBehaviour {
     public void addUnitToTeam(Unit unit){
         unit.teamNumber = teamNumberCurrentlyPlaying;
         int teamNumber = unit.teamNumber;
-        if(teamNumber != null){
-            Team team;
-            teamDictionary.TryGetValue(teamNumber, out team);
-            if(team != null){
-                team.addUnit(unit);
-            } else {
-                team = addNewTeam(teamNumber);
-                team.addUnit(unit);
-            }
+        Team team;
+        teamDictionary.TryGetValue(teamNumber, out team);
+        if(team != null){
+            team.addUnit(unit);
+        } else {
+            team = addNewTeam(teamNumber);
+            team.addUnit(unit);
         }
     }
 
     public void removeUnitFromTeam(Unit unit){
         int teamNumber = unit.teamNumber;
-        if(teamNumber != null){
-            Team team;
-            teamDictionary.TryGetValue(teamNumber, out team);
-            if(team != null){
-                team.removeUnit(unit);
-            } else {
-                Debug.LogWarning("No Team was found for the destroyed unit!" + teamNumber);
-            }
+        Team team;
+        teamDictionary.TryGetValue(teamNumber, out team);
+        if(team != null){
+            team.removeUnit(unit);
+        } else {
+            Debug.LogWarning("No Team was found for the destroyed unit!" + teamNumber);
         }
     }
 

@@ -27,7 +27,7 @@ public class Unit : MonoBehaviour {
     #endregion
 
     #region UNIT_STATE
-    public int teamNumber = 1;
+    public int teamNumber = 0;
     public bool isEnabled = false;
     private bool hasMoved = false;
     private bool hasAttacked = false;
