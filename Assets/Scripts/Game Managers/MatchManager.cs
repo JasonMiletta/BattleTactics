@@ -86,7 +86,7 @@ public class MatchManager : MonoBehaviour {
             int teamNumber = unit.teamNumber;
             Team team;
             if(teamDictionary.ContainsKey(teamNumber)){
-                team = teamDictionary[unit.teamNumber];
+                team = teamDictionary[teamNumber];
                 team.addUnit(unit);
             } else {
                 team = new Team(teamNumber, new List<Unit> {unit});
@@ -96,7 +96,6 @@ public class MatchManager : MonoBehaviour {
     }
 
     public void addUnitToTeam(Unit unit){
-        unit.teamNumber = teamNumberCurrentlyPlaying;
         int teamNumber = unit.teamNumber;
         Team team;
         teamDictionary.TryGetValue(teamNumber, out team);

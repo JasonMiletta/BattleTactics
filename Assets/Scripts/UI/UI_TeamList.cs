@@ -47,12 +47,10 @@ public class UI_TeamList : MonoBehaviour {
 	}
 
 	public void handleUnitAdded(Unit unit){
-		Debug.Log("A unit has been added to the team!");
 		addNewUnitTile(unit);
 	}
 
 	public void handleUnitRemoved(Unit unit){
-		Debug.Log("A unit has been removed from the team");
 		removeUnitTile(unit);
 	}
 
