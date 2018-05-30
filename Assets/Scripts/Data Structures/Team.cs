@@ -28,6 +28,7 @@ public class Team {
     }
 
     public void addUnit(Unit u){
+        Debug.Log("Team " + teamNumber + ": Adding Unit: " + u.unitName);
         teamUnitList.Add(u);
         if(OnUnitAdded != null){
             OnUnitAdded(u);
@@ -35,6 +36,7 @@ public class Team {
     }
 
     public void removeUnit(Unit u){
+        Debug.Log("Team " + teamNumber + ": Remove Unit: " + u.unitName);
         teamUnitList.Remove(u);
         if(OnUnitRemoved != null){
             OnUnitRemoved(u);

@@ -18,7 +18,7 @@ public class Structure : MonoBehaviour {
 
 	#region STATE
 	public int currentHealth = 5;
-	public int teamNumber = 1;
+	public int teamNumber = 0;
 	public bool isDestroyed = false;
 	public bool isUnowned = true;
 	#endregion

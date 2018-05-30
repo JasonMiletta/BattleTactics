@@ -124,6 +124,10 @@ public class GridTile : MonoBehaviour {
     public Unit getChildUnit()
     {
         return GetComponentInChildren<Unit>();
+    }   
+
+    public Structure getChildStructure(){
+        return GetComponentInChildren<Structure>();
     }
 
     private IEnumerator lerpObjToScale(GameObject obj, Vector3 targetScale, float duration)

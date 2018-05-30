@@ -27,7 +27,7 @@ public class Unit : MonoBehaviour {
     #endregion
 
     #region UNIT_STATE
-    public int teamNumber = 1;
+    public int teamNumber = 0;
     public bool isEnabled = false;
     private bool hasMoved = false;
     private bool hasAttacked = false;
@@ -62,8 +62,7 @@ public class Unit : MonoBehaviour {
         }
         anim_Floating = GetComponentInChildren<Anim_Floating>();
 
-        movementIndicatorMaterial = Resources.Load("Materials/BlueToon") as Material;
-        attackIndicatorMaterial = Resources.Load("Materials/RedToon") as Material;
+        loadIndicatorMaterials();
 	}
 	
 	// Update is called once per frame
@@ -102,8 +101,6 @@ public class Unit : MonoBehaviour {
 
     public void selectUnit()
     {
-        Debug.Log("Selected Unit");
-        Debug.Log(this);
         if(isEnabled){
             enableFloatingAnimation();
             if(!hasMoved){
@@ -188,6 +185,9 @@ public class Unit : MonoBehaviour {
         isEnabled = true;
         hasMoved = false;
         hasAttacked = false;
+        if(movementIndicatorMaterial == null){
+            loadIndicatorMaterials();
+        }
         unitStateIndicator.GetComponent<Renderer>().material = movementIndicatorMaterial;
         enableActionIndicator();
     }
@@ -219,6 +219,15 @@ public class Unit : MonoBehaviour {
 
     private void disableActionIndicator(){
         StartCoroutine(Util_TransformManipulation.lerpObjToScale(unitStateIndicator, new Vector3(0.0f, 0.0f, 0.0f), 0.5f));
+    }
+
+    private void loadIndicatorMaterials(){
+        if(movementIndicatorMaterial == null){
+            movementIndicatorMaterial = Resources.Load("Materials/BlueToon") as Material;
+        }
+        if(attackIndicatorMaterial == null){
+            attackIndicatorMaterial = Resources.Load("Materials/RedToon") as Material;
+        }
     }
 
     private void playDestructionParticle(){
