@@ -5,6 +5,7 @@ using UnityEngine;
 public class Unit : MonoBehaviour {
 
     public enum UnitAction {Moving, Attacking, Action};
+    public enum UnitActionLayoutType {Any, Line};
 
     #region UNIT_COMPONENTS
     public GameObject unitModel;
@@ -18,7 +19,9 @@ public class Unit : MonoBehaviour {
     #endregion
 
     #region UNIT_STATS
+    public UnitActionLayoutType movementLayoutType = UnitActionLayoutType.Any;
     public int moveDistance = 1;
+    public UnitActionLayoutType attackLayoutType = UnitActionLayoutType.Any;
     public int minAttackRange = 1;
     public int maxAttackRange = 1;
     public int totalHealth = 1;
@@ -38,10 +41,10 @@ public class Unit : MonoBehaviour {
     public static event UnitSelectEvent OnUnitSelect;
     public static event UnitSelectEvent OnUnitDeselect;
     
-    public delegate void UnitMoveEvent(int xCoor, int yCoor, int moveDistance);
+    public delegate void UnitMoveEvent(int xCoor, int yCoor, int moveDistance, UnitActionLayoutType actionLayoutType);
     public static event UnitMoveEvent OnUnitMoving;
 
-    public delegate void UnitAttackEvent(int xCoor, int yCoor, int moveDistance);
+    public delegate void UnitAttackEvent(int xCoor, int yCoor, int moveDistance, UnitActionLayoutType actionLayoutType);
     public static event UnitAttackEvent OnUnitAttacking;
 
     public delegate void UnitCreateEvent(Unit unit);
@@ -132,7 +135,7 @@ public class Unit : MonoBehaviour {
             GridTile tile = GetComponentInParent<GridTile>();
             if(tile != null && OnUnitMoving != null)
             {
-                OnUnitMoving(tile.xCoor, tile.yCoor, moveDistance);
+                OnUnitMoving(tile.xCoor, tile.yCoor, moveDistance, movementLayoutType);
             }
         }
     }
@@ -142,7 +145,7 @@ public class Unit : MonoBehaviour {
             GridTile tile = GetComponentInParent<GridTile>();
             if(tile != null && OnUnitAttacking != null)
             {
-                OnUnitAttacking(tile.xCoor, tile.yCoor, maxAttackRange);
+                OnUnitAttacking(tile.xCoor, tile.yCoor, maxAttackRange, attackLayoutType);
             }
         }
     }

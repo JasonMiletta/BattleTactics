@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class UnitMoveOverlayManager : MonoBehaviour {
     public enum Action {Move, Attack};
+    public enum PreviousActionDirection {Up, Down, Left, Right};
 
+    #region COMPONENTS
     public WorldTileMap tileMap;
     public GameObject[,] grid;
+    #endregion
 
+    #region STATE
     private List<GridTile> enabledGridList;
+    private GridTile currentOriginTile;
+    #endregion
 
     void OnEnable()
     {
@@ -36,36 +42,36 @@ public class UnitMoveOverlayManager : MonoBehaviour {
 		
 	}
 
-    public void displayMoveOverlays(int xCoor, int yCoor, int moveDistance){
+    public void displayMoveOverlays(int xCoor, int yCoor, int moveDistance, Unit.UnitActionLayoutType movementLayoutType){
         Debug.Log("Display Move Overlays!");
-        displayOverlays(xCoor, yCoor, moveDistance, Action.Move);
+        displayOverlays(xCoor, yCoor, moveDistance, Action.Move, movementLayoutType);
     }
 
-    public void displayAttackOverlays(int xCoor, int yCoor, int attackDistance){
+    public void displayAttackOverlays(int xCoor, int yCoor, int attackDistance, Unit.UnitActionLayoutType attackLayoutType){
         Debug.Log("Display Attack Overlays!");
-        displayOverlays(xCoor, yCoor, attackDistance, Action.Attack);
+        displayOverlays(xCoor, yCoor, attackDistance, Action.Attack, attackLayoutType);
     }
 
     
-    public void displayOverlays(int xCoor, int yCoor, int distance, Action action)
+    public void displayOverlays(int xCoor, int yCoor, int distance, Action action, Unit.UnitActionLayoutType actionLayoutType)
     {
         GameObject tile = tileMap.grid[xCoor, yCoor];
         if (tile != null) {
-            GridTile originTile = tile.GetComponent<GridTile>();
+            currentOriginTile = tile.GetComponent<GridTile>();
 
             //right
-            displayAdjacentTileOverlays(xCoor + 1, yCoor, distance, action);
+            displayAdjacentTileOverlays(xCoor + 1, yCoor, distance, action, actionLayoutType, PreviousActionDirection.Right);
             //left
-            displayAdjacentTileOverlays(xCoor - 1, yCoor, distance, action);
+            displayAdjacentTileOverlays(xCoor - 1, yCoor, distance, action, actionLayoutType, PreviousActionDirection.Left);
             //up
-            displayAdjacentTileOverlays(xCoor, yCoor + 1, distance, action);
+            displayAdjacentTileOverlays(xCoor, yCoor + 1, distance, action, actionLayoutType, PreviousActionDirection.Up);
             //down
-            displayAdjacentTileOverlays(xCoor, yCoor - 1, distance, action);
+            displayAdjacentTileOverlays(xCoor, yCoor - 1, distance, action, actionLayoutType, PreviousActionDirection.Down);
         }
     
     }
 
-    private void displayAdjacentTileOverlays(int xCoor, int yCoor, int distance, Action action)
+    private void displayAdjacentTileOverlays(int xCoor, int yCoor, int distance, Action action, Unit.UnitActionLayoutType actionLayoutType, PreviousActionDirection prevActionDirection)
     {
         if (xCoor >= 0 && xCoor < tileMap.grid.GetLength(0) && yCoor >= 0 && yCoor < tileMap.grid.GetLength(1))
         {
@@ -73,28 +79,47 @@ public class UnitMoveOverlayManager : MonoBehaviour {
             if (currentTile != null)
             {
                 GridTile tile = currentTile.GetComponent<GridTile>();
-                if (tile.isOverlayActive())
-                {
-                    return;
-                }
-                //Display moveOverlay and then display attack overlays on adjacent tiles
-                if (distance > 0)
-                {
-                    int remainingDistance = distance - 1 ;
-                    if(action == Action.Move){
-                        tile.enableMoveOverlay();
-                    } else if(action == Action.Attack){
-                        tile.enableAttackOverlay();
+                if(currentOriginTile != tile){
+                    //Display moveOverlay and then display attack overlays on adjacent tiles
+                    if (distance > 0)
+                    {
+                        int remainingDistance = distance - 1 ;
+                        if(action == Action.Move){
+                            Debug.Log("x,y : " + xCoor + ", " + yCoor);
+                            tile.enableMoveOverlay();
+                        } else if(action == Action.Attack){
+                            Debug.Log("x,y : " + xCoor + ", " + yCoor);
+                            tile.enableAttackOverlay();
+                        }
+                        enabledGridList.Add(tile);
+                        if(actionLayoutType == Unit.UnitActionLayoutType.Any){
+                            //right
+                            displayAdjacentTileOverlays(xCoor + 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Right);
+                            //left
+                            displayAdjacentTileOverlays(xCoor - 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Left);
+                            //up
+                            displayAdjacentTileOverlays(xCoor, yCoor + 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Up);
+                            //down
+                            displayAdjacentTileOverlays(xCoor, yCoor - 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Down);
+                        } else if(actionLayoutType == Unit.UnitActionLayoutType.Line){
+                            //right
+                            if(prevActionDirection == PreviousActionDirection.Right){
+                                displayAdjacentTileOverlays(xCoor + 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Right);
+                            }
+                            //left
+                            if(prevActionDirection == PreviousActionDirection.Left){
+                                displayAdjacentTileOverlays(xCoor - 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Left);
+                            }
+                            //up
+                            if(prevActionDirection == PreviousActionDirection.Up){
+                                displayAdjacentTileOverlays(xCoor, yCoor + 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Up);
+                            }
+                            //down
+                            if(prevActionDirection == PreviousActionDirection.Down){
+                                displayAdjacentTileOverlays(xCoor, yCoor - 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Down);
+                            }
+                        }
                     }
-                    enabledGridList.Add(tile);
-                    //right
-                    displayAdjacentTileOverlays(xCoor + 1, yCoor, remainingDistance, action);
-                    //left
-                    displayAdjacentTileOverlays(xCoor - 1, yCoor, remainingDistance, action);
-                    //up
-                    displayAdjacentTileOverlays(xCoor, yCoor + 1, remainingDistance, action);
-                    //down
-                    displayAdjacentTileOverlays(xCoor, yCoor - 1, remainingDistance, action);
                 }
             }
         }
