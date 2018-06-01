@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class UI_TeamList : MonoBehaviour {
 
+	#region COMPONENTS
 	public GameObject UnitTilePrefab;
 	public Dictionary<Unit, GameObject> unitTileDictionary = new Dictionary<Unit, GameObject>();
+	#endregion
 	
 	 void OnEnable()
     {

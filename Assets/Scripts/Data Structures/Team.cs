@@ -29,9 +29,13 @@ public class Team {
 
     public void addUnit(Unit u){
         Debug.Log("Team " + teamNumber + ": Adding Unit: " + u.unitName);
-        teamUnitList.Add(u);
-        if(OnUnitAdded != null){
-            OnUnitAdded(u);
+        if(teamUnitList.Contains(u)){
+            Debug.LogWarning("This team already contains the unit!");
+        } else {
+            teamUnitList.Add(u);
+            if(OnUnitAdded != null){
+                OnUnitAdded(u);
+            }
         }
     }
 
