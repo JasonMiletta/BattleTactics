@@ -17,5 +17,8 @@ public class MatchManagerEditor : Editor
         if(GUILayout.Button("End Turn")){
             matchManagerScript.proceedToNextTeamsTurn();
         }
+        if(GUILayout.Button("Debug Current Teams")){
+            matchManagerScript.debugCurrentTeams();
+        }
     }
 }
