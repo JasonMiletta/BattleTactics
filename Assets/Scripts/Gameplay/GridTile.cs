@@ -204,7 +204,7 @@ public class GridTile : MonoBehaviour {
 
     public void enableAttackOverlay()
     {
-        if(attackOverlay != null && !moveOverlay.activeSelf)
+        if(attackOverlay != null && !moveOverlay.activeSelf && getChildUnit() != null)
         {
             attackOverlay.SetActive(true);
         }

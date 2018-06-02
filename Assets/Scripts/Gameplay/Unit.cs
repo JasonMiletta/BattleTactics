@@ -37,14 +37,14 @@ public class Unit : MonoBehaviour {
     #endregion
 
     #region EVENTS
-    public delegate void UnitSelectEvent(int xCoor, int yCoor, int moveDistance);
+    public delegate void UnitSelectEvent(int xCoor, int yCoor, Unit unit);
     public static event UnitSelectEvent OnUnitSelect;
     public static event UnitSelectEvent OnUnitDeselect;
     
-    public delegate void UnitMoveEvent(int xCoor, int yCoor, int moveDistance, UnitActionLayoutType actionLayoutType);
+    public delegate void UnitMoveEvent(int xCoor, int yCoor, Unit unit);
     public static event UnitMoveEvent OnUnitMoving;
 
-    public delegate void UnitAttackEvent(int xCoor, int yCoor, int moveDistance, UnitActionLayoutType actionLayoutType);
+    public delegate void UnitAttackEvent(int xCoor, int yCoor, Unit unit);
     public static event UnitAttackEvent OnUnitAttacking;
 
     public delegate void UnitCreateEvent(Unit unit);
@@ -114,7 +114,7 @@ public class Unit : MonoBehaviour {
                 GridTile tile = GetComponentInParent<GridTile>();
                 if(tile != null && OnUnitSelect != null)
                 {
-                    OnUnitSelect(tile.xCoor, tile.yCoor, moveDistance);
+                    OnUnitSelect(tile.xCoor, tile.yCoor, this);
                 }
             }
         }
@@ -126,7 +126,7 @@ public class Unit : MonoBehaviour {
         GridTile tile = GetComponentInParent<GridTile>();
         if (tile != null && OnUnitDeselect != null)
         {
-            OnUnitDeselect(tile.xCoor, tile.yCoor, moveDistance);
+            OnUnitDeselect(tile.xCoor, tile.yCoor, this);
         }
     }
 
@@ -135,7 +135,7 @@ public class Unit : MonoBehaviour {
             GridTile tile = GetComponentInParent<GridTile>();
             if(tile != null && OnUnitMoving != null)
             {
-                OnUnitMoving(tile.xCoor, tile.yCoor, moveDistance, movementLayoutType);
+                OnUnitMoving(tile.xCoor, tile.yCoor, this);
             }
         }
     }
@@ -145,7 +145,7 @@ public class Unit : MonoBehaviour {
             GridTile tile = GetComponentInParent<GridTile>();
             if(tile != null && OnUnitAttacking != null)
             {
-                OnUnitAttacking(tile.xCoor, tile.yCoor, maxAttackRange, attackLayoutType);
+                OnUnitAttacking(tile.xCoor, tile.yCoor, this);
             }
         }
     }

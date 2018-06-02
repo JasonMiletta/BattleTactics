@@ -42,48 +42,48 @@ public class UnitMoveOverlayManager : MonoBehaviour {
 		
 	}
 
-    public void displayMoveOverlays(int xCoor, int yCoor, int moveDistance, Unit.UnitActionLayoutType movementLayoutType){
+    public void displayMoveOverlays(int xCoor, int yCoor, Unit unit){
         Debug.Log("Display Move Overlays!");
-        displayOverlays(xCoor, yCoor, moveDistance, Action.Move, movementLayoutType);
+        displayOverlays(xCoor, yCoor, 0, unit.moveDistance, Action.Move, unit.movementLayoutType);
     }
 
-    public void displayAttackOverlays(int xCoor, int yCoor, int attackDistance, Unit.UnitActionLayoutType attackLayoutType){
+    public void displayAttackOverlays(int xCoor, int yCoor, Unit unit){
         Debug.Log("Display Attack Overlays!");
-        displayOverlays(xCoor, yCoor, attackDistance, Action.Attack, attackLayoutType);
+        displayOverlays(xCoor, yCoor, unit.minAttackRange, unit.maxAttackRange, Action.Attack, unit.attackLayoutType);
     }
 
-    
-    public void displayOverlays(int xCoor, int yCoor, int distance, Action action, Unit.UnitActionLayoutType actionLayoutType)
+    //Recursive Base case 
+    private void displayOverlays(int xCoor, int yCoor, int minDistance, int maxDistance, Action action, Unit.UnitActionLayoutType actionLayoutType)
     {
-        GameObject tile = tileMap.grid[xCoor, yCoor];
-        if (tile != null) {
-            currentOriginTile = tile.GetComponent<GridTile>();
-
-            //right
-            displayAdjacentTileOverlays(xCoor + 1, yCoor, distance, action, actionLayoutType, PreviousActionDirection.Right);
-            //left
-            displayAdjacentTileOverlays(xCoor - 1, yCoor, distance, action, actionLayoutType, PreviousActionDirection.Left);
-            //up
-            displayAdjacentTileOverlays(xCoor, yCoor + 1, distance, action, actionLayoutType, PreviousActionDirection.Up);
-            //down
-            displayAdjacentTileOverlays(xCoor, yCoor - 1, distance, action, actionLayoutType, PreviousActionDirection.Down);
-        }
-    
+        //right
+        displayAdjacentTileOverlays(xCoor + 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
+        //left
+        displayAdjacentTileOverlays(xCoor - 1, yCoor, minDistance,  maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
+        //up
+        displayAdjacentTileOverlays(xCoor, yCoor + 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
+        //down
+        displayAdjacentTileOverlays(xCoor, yCoor - 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
     }
 
-    private void displayAdjacentTileOverlays(int xCoor, int yCoor, int distance, Action action, Unit.UnitActionLayoutType actionLayoutType, PreviousActionDirection prevActionDirection)
+    //Recursive Loop
+    private void displayAdjacentTileOverlays(int xCoor, int yCoor, int minDistance, int maxDistance, Action action, Unit.UnitActionLayoutType actionLayoutType, PreviousActionDirection prevActionDirection)
     {
-        if (xCoor >= 0 && xCoor < tileMap.grid.GetLength(0) && yCoor >= 0 && yCoor < tileMap.grid.GetLength(1))
+        //Check that we havent reached the edge of the tilegrid and that there's distance remaining
+        if (xCoor >= 0 && xCoor < tileMap.grid.GetLength(0) && yCoor >= 0 && yCoor < tileMap.grid.GetLength(1) && maxDistance > 0)
         {
+            //Check that we somehow dont have a missing tile in the tileMap
             GameObject currentTile = tileMap.grid[xCoor, yCoor];
             if (currentTile != null)
             {
                 GridTile tile = currentTile.GetComponent<GridTile>();
                 if(currentOriginTile != tile){
-                    //Display moveOverlay and then display attack overlays on adjacent tiles
-                    if (distance > 0)
-                    {
-                        int remainingDistance = distance - 1 ;
+
+                    //If we havent reached the minimum distance, decrement and continue on. Else, enable tiles overlay based on action
+                    if(minDistance > 0){
+                        --minDistance;
+                        --maxDistance;
+                    } else {
+                        --maxDistance;
                         if(action == Action.Move){
                             Debug.Log("x,y : " + xCoor + ", " + yCoor);
                             tile.enableMoveOverlay();
@@ -92,32 +92,42 @@ public class UnitMoveOverlayManager : MonoBehaviour {
                             tile.enableAttackOverlay();
                         }
                         enabledGridList.Add(tile);
-                        if(actionLayoutType == Unit.UnitActionLayoutType.Any){
-                            //right
-                            displayAdjacentTileOverlays(xCoor + 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Right);
-                            //left
-                            displayAdjacentTileOverlays(xCoor - 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Left);
-                            //up
-                            displayAdjacentTileOverlays(xCoor, yCoor + 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Up);
-                            //down
-                            displayAdjacentTileOverlays(xCoor, yCoor - 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Down);
-                        } else if(actionLayoutType == Unit.UnitActionLayoutType.Line){
-                            //right
-                            if(prevActionDirection == PreviousActionDirection.Right){
-                                displayAdjacentTileOverlays(xCoor + 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Right);
-                            }
-                            //left
-                            if(prevActionDirection == PreviousActionDirection.Left){
-                                displayAdjacentTileOverlays(xCoor - 1, yCoor, remainingDistance, action, actionLayoutType, PreviousActionDirection.Left);
-                            }
-                            //up
-                            if(prevActionDirection == PreviousActionDirection.Up){
-                                displayAdjacentTileOverlays(xCoor, yCoor + 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Up);
-                            }
-                            //down
-                            if(prevActionDirection == PreviousActionDirection.Down){
-                                displayAdjacentTileOverlays(xCoor, yCoor - 1, remainingDistance, action, actionLayoutType, PreviousActionDirection.Down);
-                            }
+                    }
+
+                    //Recurse based unitAction layout type (Currently Any or Line)
+                    if(actionLayoutType == Unit.UnitActionLayoutType.Any){
+                        //right
+                        if(prevActionDirection != PreviousActionDirection.Left){
+                            displayAdjacentTileOverlays(xCoor + 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
+                        }
+                        //left
+                        if(prevActionDirection != PreviousActionDirection.Right){
+                            displayAdjacentTileOverlays(xCoor - 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
+                        }
+                        //up
+                        if(prevActionDirection != PreviousActionDirection.Down){
+                            displayAdjacentTileOverlays(xCoor, yCoor + 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
+                        }
+                        //down
+                        if(prevActionDirection != PreviousActionDirection.Up){
+                            displayAdjacentTileOverlays(xCoor, yCoor - 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
+                        }
+                    } else if(actionLayoutType == Unit.UnitActionLayoutType.Line){
+                        //right
+                        if(prevActionDirection == PreviousActionDirection.Right){
+                            displayAdjacentTileOverlays(xCoor + 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
+                        }
+                        //left
+                        if(prevActionDirection == PreviousActionDirection.Left){
+                            displayAdjacentTileOverlays(xCoor - 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
+                        }
+                        //up
+                        if(prevActionDirection == PreviousActionDirection.Up){
+                            displayAdjacentTileOverlays(xCoor, yCoor + 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
+                        }
+                        //down
+                        if(prevActionDirection == PreviousActionDirection.Down){
+                            displayAdjacentTileOverlays(xCoor, yCoor - 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
                         }
                     }
                 }
@@ -125,7 +135,7 @@ public class UnitMoveOverlayManager : MonoBehaviour {
         }
     }
 
-    public void disableAttackMoveOverlays(int xCoor, int yCoor, int moveDistance)
+    public void disableAttackMoveOverlays(int xCoor, int yCoor, Unit unit)
     {
         foreach(GridTile tile in enabledGridList)
         {
