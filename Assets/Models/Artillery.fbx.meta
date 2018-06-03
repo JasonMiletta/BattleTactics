@@ -60,7 +60,12 @@ ModelImporter:
     4300014: 01 RocketPod_81
     4300016: 01 Tank Body Front 04_86
     4300018: 03 engine 01_87
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blueSteel
+    second: {fileID: 2100000, guid: 57de1b26b13de644eabf9a7744d4722f, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

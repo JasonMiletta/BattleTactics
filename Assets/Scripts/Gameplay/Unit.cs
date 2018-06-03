@@ -66,6 +66,7 @@ public class Unit : MonoBehaviour {
         anim_Floating = GetComponentInChildren<Anim_Floating>();
 
         loadIndicatorMaterials();
+        SetTeamColor(teamNumber);
 	}
 	
 	// Update is called once per frame
@@ -75,6 +76,59 @@ public class Unit : MonoBehaviour {
     void OnDestroy(){
         if(OnUnitDestroy != null){
             OnUnitDestroy(this);
+        }
+    }
+
+    //Sets the team color. May not seem apparent, but do note that this is network code.
+    private void SetTeamColor(int colorValue) {
+        Debug.Log("Setting Team Color: " + colorValue);
+        int teamColorValue = colorValue;
+        switch (colorValue) {
+            default:
+                foreach(Renderer renderer in GetComponentsInChildren<Renderer>()){
+                    foreach(Material mat in renderer.materials){
+                        if(mat.name.Contains("TeamColor")){
+                            mat.SetColor("_TeamColor", Color.gray);
+                        }
+                    }
+                }
+                break;
+            case 0:
+                foreach(Renderer renderer in GetComponentsInChildren<Renderer>()){
+                    foreach(Material mat in renderer.materials){
+                        if(mat.name.Contains("TeamColor")){
+                            mat.SetColor("_TeamColor", Color.gray);
+                        }
+                    }
+                }
+                break;
+            case 1:
+                foreach(Renderer renderer in GetComponentsInChildren<Renderer>()){
+                    foreach(Material mat in renderer.materials){
+                        if(mat.name.Contains("TeamColor")){
+                            mat.SetColor("_TeamColor", new Color(0, 0.5f, 1));
+                        }
+                    }
+                }
+                break;
+            case 2:
+                foreach(Renderer renderer in GetComponentsInChildren<Renderer>()){
+                    foreach(Material mat in renderer.materials){
+                        if(mat.name.Contains("TeamColor")){
+                            mat.SetColor("_TeamColor", Color.red);
+                        }
+                    }
+                }
+                break;
+            case 3:
+                foreach(Renderer renderer in GetComponentsInChildren<Renderer>()){
+                    foreach(Material mat in renderer.materials){
+                        if(mat.name.Contains("TeamColor")){
+                            mat.SetColor("_TeamColor", Color.green);
+                        }
+                    }
+                }
+                break;
         }
     }
 

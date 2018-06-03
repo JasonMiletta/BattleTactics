@@ -85,10 +85,8 @@ public class UnitMoveOverlayManager : MonoBehaviour {
                     } else {
                         --maxDistance;
                         if(action == Action.Move){
-                            Debug.Log("x,y : " + xCoor + ", " + yCoor);
                             tile.enableMoveOverlay();
                         } else if(action == Action.Attack){
-                            Debug.Log("x,y : " + xCoor + ", " + yCoor);
                             tile.enableAttackOverlay();
                         }
                         enabledGridList.Add(tile);

@@ -55,7 +55,12 @@ ModelImporter:
     4300012: 01 Tank Body turret 02_90
     4300014: 01 Tank Barrel 01_91
     4300016: 03 engine 01_92
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blueSteel
+    second: {fileID: 2100000, guid: 57de1b26b13de644eabf9a7744d4722f, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

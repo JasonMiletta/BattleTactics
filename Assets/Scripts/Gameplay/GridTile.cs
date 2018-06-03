@@ -174,13 +174,9 @@ public class GridTile : MonoBehaviour {
 
     public void enableMoveOverlay()
     {
-        if(moveOverlay != null)
+        if(moveOverlay != null && currentTileType != tileType.Blank && getChildUnit() == null)
         {
             moveOverlay.SetActive(true);
-        }
-        if(attackOverlay != null)
-        {
-            attackOverlay.SetActive(false);
         }
     }
 
@@ -204,7 +200,8 @@ public class GridTile : MonoBehaviour {
 
     public void enableAttackOverlay()
     {
-        if(attackOverlay != null && !moveOverlay.activeSelf && getChildUnit() != null)
+        Unit childUnit = getChildUnit();
+        if(attackOverlay != null && !moveOverlay.activeSelf && childUnit != null)
         {
             attackOverlay.SetActive(true);
         }
