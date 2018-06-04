@@ -46,6 +46,9 @@ public class Unit : MonoBehaviour {
 
     public delegate void UnitAttackEvent(int xCoor, int yCoor, Unit unit);
     public static event UnitAttackEvent OnUnitAttacking;
+    
+    public delegate void UnitRangeInfoEvent(int xCoor, int yCoor, Unit unit);
+    public static event UnitRangeInfoEvent OnUnitRangeInfo;
 
     public delegate void UnitCreateEvent(Unit unit);
     public static event UnitCreateEvent OnUnitCreate;
@@ -164,12 +167,11 @@ public class Unit : MonoBehaviour {
                 startMoving();
             } else if(!hasAttacked){
                 startAttacking();
-            }   else {
-                GridTile tile = GetComponentInParent<GridTile>();
-                if(tile != null && OnUnitSelect != null)
-                {
-                    OnUnitSelect(tile.xCoor, tile.yCoor, this);
-                }
+            }
+            GridTile tile = GetComponentInParent<GridTile>();
+            if(tile != null && OnUnitSelect != null)
+            {
+                OnUnitSelect(tile.xCoor, tile.yCoor, this);
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitMoveOverlayManager : MonoBehaviour {
-    public enum Action {Move, Attack};
+    public enum Action {Move, Attack, AttackRange};
     public enum PreviousActionDirection {Up, Down, Left, Right};
 
     #region COMPONENTS
@@ -21,6 +21,7 @@ public class UnitMoveOverlayManager : MonoBehaviour {
         Unit.OnUnitDeselect += disableAttackMoveOverlays;
         Unit.OnUnitMoving += displayMoveOverlays;
         Unit.OnUnitAttacking += displayAttackOverlays;
+        Unit.OnUnitRangeInfo += displayAttackRangeOverlays;
     }
 
     void OnDisable()
@@ -28,6 +29,7 @@ public class UnitMoveOverlayManager : MonoBehaviour {
         Unit.OnUnitDeselect -= disableAttackMoveOverlays;
         Unit.OnUnitMoving -= displayMoveOverlays;
         Unit.OnUnitAttacking -= displayAttackOverlays;
+        Unit.OnUnitRangeInfo -= displayAttackRangeOverlays;
     }
 
     // Use this for initialization
@@ -50,6 +52,11 @@ public class UnitMoveOverlayManager : MonoBehaviour {
     public void displayAttackOverlays(int xCoor, int yCoor, Unit unit){
         Debug.Log("Display Attack Overlays!");
         displayOverlays(xCoor, yCoor, unit.minAttackRange, unit.maxAttackRange, Action.Attack, unit.attackLayoutType);
+    }
+
+    public void displayAttackRangeOverlays(int xCoor, int yCoor, Unit unit){
+        Debug.Log("Display Attack Range Overlays!");
+        displayOverlays(xCoor, yCoor, unit.minAttackRange, unit.maxAttackRange + unit.moveDistance, Action.AttackRange, unit.attackLayoutType);
     }
 
     //Recursive Base case 
@@ -87,6 +94,8 @@ public class UnitMoveOverlayManager : MonoBehaviour {
                         if(action == Action.Move){
                             tile.enableMoveOverlay();
                         } else if(action == Action.Attack){
+                            tile.enableAttackOverlay();
+                        } else if(action == Action.AttackRange){
                             tile.enableAttackOverlay();
                         }
                         enabledGridList.Add(tile);

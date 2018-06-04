@@ -9,7 +9,19 @@ public class UI_HUDManager : MonoBehaviour {
 	public GameObject Text_TurnCounter;
 	public GameObject Text_CurrentTeamPlaying;
 	public UI_TeamList TeamList;
+	public UI_UnitActionPanel UnitActionPanel;
 	#endregion
+
+	void OnEnable(){
+		Unit.OnUnitSelect += displayUnitActionPanel;
+		Unit.OnUnitDeselect += hideUnitActionPanel;
+	}
+
+	void OnDisable(){
+		Unit.OnUnitSelect -= displayUnitActionPanel;
+		Unit.OnUnitDeselect -= hideUnitActionPanel;
+	}
+
 	// Use this for initialization
 	void Start () {
 		if(Text_TurnCounter == null){
@@ -20,6 +32,9 @@ public class UI_HUDManager : MonoBehaviour {
 		}
 		if(TeamList == null){
 			Debug.LogWarning("TeamList object is missing!");
+		}
+		if(UnitActionPanel == null){
+			Debug.LogWarning("Unit Action panel object is missing!");
 		}
 	}
 	
@@ -38,5 +53,17 @@ public class UI_HUDManager : MonoBehaviour {
 		currentTeamPlayingText.text = "Player " + currentTeamPlaying + "'s Turn";
 
 		TeamList.resetTeamListForTeam(team);
+	}
+
+	private void displayUnitActionPanel(int xCoor, int yCoor, Unit unit){
+		if(UnitActionPanel != null){
+			UnitActionPanel.gameObject.SetActive(true);
+		}
+	}
+
+	private void hideUnitActionPanel(int xCoor, int yCoor, Unit unit){
+		if(UnitActionPanel != null){
+			UnitActionPanel.gameObject.SetActive(false);
+		}
 	}
 }
