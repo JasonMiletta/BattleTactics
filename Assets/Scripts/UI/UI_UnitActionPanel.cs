@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class UI_UnitActionPanel : MonoBehaviour {
 
+	#region COMPONENTS
+	public Cursor cursor;
+	#endregion
+
 	// Use this for initialization
 	void Start () {
-		
+		if(cursor == null){
+			Debug.LogError("UI_UnitActionPanel: cursor component is not set!");
+		}
 	}
 	
 	// Update is called once per frame
@@ -15,14 +21,29 @@ public class UI_UnitActionPanel : MonoBehaviour {
 	}
 
 	public void unitMove(){
-		//TODO For the currentlySelectedUnit, start moving - Unit.startMoving()
+		Unit currentlySelectedUnit = cursor.getCurrentlySelectedUnit();
+		if(currentlySelectedUnit != null){
+			cursor.beginMovingUnit();
+			EntityActionController.beginMovingAction(currentlySelectedUnit);
+		}
 	}
 
 	public void unitAttack(){
-		//TODO For the currentlySelectedUnit, start attacking - Unit.startAttacking()
+		Unit currentlySelectedUnit = cursor.getCurrentlySelectedUnit();
+		if(currentlySelectedUnit != null){
+			cursor.beginAttackingUnit();
+			EntityActionController.beginAttackAction(currentlySelectedUnit);
+		}
 	}
 
 	public void unitAttackRange(){
-		//TODO For the currentlySelectedUnit, start displaying attack range -
+		Unit currentlySelectedUnit = cursor.getCurrentlySelectedUnit();
+		if(currentlySelectedUnit != null){
+			EntityActionController.beginAttackRangeInfoAction(currentlySelectedUnit);
+		}
+	}
+
+	public void cancel(){
+		cursor.cancel();
 	}
 }

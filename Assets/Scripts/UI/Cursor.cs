@@ -69,10 +69,7 @@ public class Cursor : MonoBehaviour {
 
             if (Input.GetMouseButtonDown(1))
             {
-                if (selectedGridTile != null)
-                {
-                    cursorDeselect();
-                }
+                cancel();
             }
 
             #region DEBUG
@@ -95,11 +92,9 @@ public class Cursor : MonoBehaviour {
 
             if(currentCursorState == CursorState.UnitSelected){
                 if(Input.GetAxis("Hotkey1") > 0){
-                    currentCursorState = CursorState.UnitMove;
-                    currentlySelectedUnit.startMoving();
+                    beginMovingUnit();
                 } else if(Input.GetAxis("Hotkey2") > 0){
-                    currentCursorState = CursorState.UnitAction;
-                    currentlySelectedUnit.startAttacking();
+                    beginAttackingUnit();
                 }
             }
         }
@@ -141,15 +136,19 @@ public class Cursor : MonoBehaviour {
         //If we're currently moving a unit
         if (currentlySelectedUnit != null)
         {
-            if (currentHighlightedTile.isMoveable())
-            {
-                currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
-                cursorDeselect();
-                return;
-            } else if (currentHighlightedTile.isAttackable()){
-                currentlySelectedUnit.attackTile(currentHighlightedTile);
-                cursorDeselect();
-                return;
+            if(currentCursorState == CursorState.UnitMove){
+                if (currentHighlightedTile.isMoveable())
+                {
+                    currentlySelectedUnit.moveUnitToGridTile(currentHighlightedTile);
+                    cursorDeselect();
+                    return;
+                }
+            } else if (currentCursorState == CursorState.UnitAction){
+                if(currentHighlightedTile.isAttackable()){
+                    currentlySelectedUnit.attackTile(currentHighlightedTile);
+                    cursorDeselect();
+                    return;
+                }
             } else {
                 cursorDeselect();
                 return;
@@ -179,6 +178,25 @@ public class Cursor : MonoBehaviour {
         currentCursorState = CursorState.Empty;
         Vector3 destination = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
         StartCoroutine(Util_TransformManipulation.smoothMovement(gameObject, transform.position, destination, 0.1f));
+    }
+
+    public void cancel(){
+        cursorDeselect();
+        currentCursorState = CursorState.Empty;
+    }
+
+    public Unit getCurrentlySelectedUnit(){
+        return currentlySelectedUnit;
+    }
+
+    public void beginMovingUnit(){
+        currentCursorState = CursorState.UnitMove;
+        currentlySelectedUnit.startMoving();
+    }
+
+    public void beginAttackingUnit(){
+        currentCursorState = CursorState.UnitAction;
+        currentlySelectedUnit.startAttacking();
     }
 
     private bool selectCurrentTile()

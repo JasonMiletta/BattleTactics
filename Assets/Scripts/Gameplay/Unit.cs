@@ -163,11 +163,13 @@ public class Unit : MonoBehaviour {
     {
         if(isEnabled){
             enableFloatingAnimation();
-            if(!hasMoved){
-                startMoving();
-            } else if(!hasAttacked){
-                startAttacking();
-            }
+            /* We're handling this with Hud actions and hotkeys now
+                if(!hasMoved){
+                    startMoving();
+                } else if(!hasAttacked){
+                    startAttacking();
+                }
+            */
             GridTile tile = GetComponentInParent<GridTile>();
             if(tile != null && OnUnitSelect != null)
             {
