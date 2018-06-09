@@ -208,6 +208,13 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    public void startDisplayAttackRange(){
+        GridTile tile = GetComponentInParent<GridTile>();
+        if(tile != null && OnUnitRangeInfo != null){
+            OnUnitRangeInfo(tile.xCoor, tile.yCoor, this);
+        }
+    }
+
     //@Description - Used when inflicting damage to another unit
     public void attackTile(GridTile tile){
         GameObject poof = Resources.Load("Particle Systems/Poof") as GameObject;

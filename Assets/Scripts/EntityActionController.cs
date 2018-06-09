@@ -23,6 +23,6 @@ public class EntityActionController {
 	}
 
 	public static void beginAttackRangeInfoAction(Unit unit){
-		//unit.
+		unit.startDisplayAttackRange();
 	}
 }

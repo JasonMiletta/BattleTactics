@@ -96,7 +96,7 @@ public class UnitMoveOverlayManager : MonoBehaviour {
                         } else if(action == Action.Attack){
                             tile.enableAttackOverlay();
                         } else if(action == Action.AttackRange){
-                            tile.enableAttackOverlay();
+                            tile.enableAttackRangeOverlay();
                         }
                         enabledGridList.Add(tile);
                     }

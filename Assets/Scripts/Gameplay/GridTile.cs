@@ -207,6 +207,12 @@ public class GridTile : MonoBehaviour {
         }
     }
 
+    public void enableAttackRangeOverlay(){
+        if(attackOverlay != null){
+            attackOverlay.SetActive(true);
+        }
+    }
+
     public void disableAttackOverlay()
     {
         if(attackOverlay != null)
