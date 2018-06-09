@@ -6,10 +6,11 @@ public class UI_TilePreviewController : MonoBehaviour {
 
 	#region COMPONENTS
 	public Camera previewCamera;
+	private Anim_OpenCloseForm anim_OpenCloseForm;
 	#endregion
 
 	#region PARAMETER
-	public Vector3 positionOffset = new Vector3(0.0f, 1.0f, -1.0f);
+	public Vector3 positionOffset = new Vector3(0.0f, 2.0f, -1.0f);
 	#endregion
 	void OnEnable(){
 		GridTile.OnTileSelect += handleTileSelectedEvent;
@@ -31,6 +32,11 @@ public class UI_TilePreviewController : MonoBehaviour {
 		} else {
 			previewCamera.gameObject.SetActive(false);
 		}
+		
+		anim_OpenCloseForm = GetComponent<Anim_OpenCloseForm>();
+		if(anim_OpenCloseForm == null){
+			Debug.LogError("UI_UnitActionPanel: Animator is missing from this object!");
+		}
 	}
 	
 	// Update is called once per frame
@@ -42,11 +48,17 @@ public class UI_TilePreviewController : MonoBehaviour {
 		previewCamera.gameObject.transform.position = tile.transform.position + positionOffset;
 		previewCamera.gameObject.transform.LookAt(tile.transform);
 		previewCamera.gameObject.SetActive(true);
+		if(anim_OpenCloseForm == null){
+			anim_OpenCloseForm = GetComponent<Anim_OpenCloseForm>();
+		}
+		if(anim_OpenCloseForm != null){
+			anim_OpenCloseForm.OpenPanel();
+		}
 		Debug.Log("Camera Active!");
 	}
-
 	private void handleTileDeselectedEvent(GridTile tile){
-		previewCamera.gameObject.SetActive(false);
-		Debug.Log("Camera deactive!");
+		if(anim_OpenCloseForm != null){
+			anim_OpenCloseForm.ClosePanel();
+		}
 	}	
 }

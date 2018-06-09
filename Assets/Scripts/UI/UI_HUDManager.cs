@@ -58,12 +58,14 @@ public class UI_HUDManager : MonoBehaviour {
 	private void displayUnitActionPanel(int xCoor, int yCoor, Unit unit){
 		if(UnitActionPanel != null){
 			UnitActionPanel.gameObject.SetActive(true);
+			UnitActionPanel.openPanel();
 		}
 	}
 
 	private void hideUnitActionPanel(int xCoor, int yCoor, Unit unit){
 		if(UnitActionPanel != null){
-			UnitActionPanel.gameObject.SetActive(false);
+			UnitActionPanel.closePanel();
+			//UnitActionPanel.gameObject.SetActive(false);
 		}
 	}
 }

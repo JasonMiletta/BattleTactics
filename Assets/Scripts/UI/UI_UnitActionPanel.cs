@@ -6,6 +6,7 @@ public class UI_UnitActionPanel : MonoBehaviour {
 
 	#region COMPONENTS
 	public Cursor cursor;
+	private Anim_OpenCloseForm anim_OpenCloseForm;
 	#endregion
 
 	// Use this for initialization
@@ -13,11 +14,31 @@ public class UI_UnitActionPanel : MonoBehaviour {
 		if(cursor == null){
 			Debug.LogError("UI_UnitActionPanel: cursor component is not set!");
 		}
+		
+		anim_OpenCloseForm = GetComponent<Anim_OpenCloseForm>();
+		if(anim_OpenCloseForm == null){
+			Debug.LogError("UI_UnitActionPanel: Animator is missing from this object!");
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public void openPanel(){
+		if(anim_OpenCloseForm == null){
+			anim_OpenCloseForm = GetComponent<Anim_OpenCloseForm>();
+		}
+		if(anim_OpenCloseForm != null){
+			anim_OpenCloseForm.OpenPanel();
+		}
+	}
+
+	public void closePanel(){
+		if(anim_OpenCloseForm != null){
+			anim_OpenCloseForm.ClosePanel();
+		}
 	}
 
 	public void unitMove(){
