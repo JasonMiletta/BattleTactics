@@ -46,34 +46,34 @@ public class UnitMoveOverlayManager : MonoBehaviour {
 
     public void displayMoveOverlays(int xCoor, int yCoor, Unit unit){
         Debug.Log("Display Move Overlays!");
-        displayOverlays(xCoor, yCoor, 0, unit.moveDistance, Action.Move, unit.movementLayoutType);
+        displayOverlays(xCoor, yCoor, unit.teamNumber, 0, unit.moveDistance, Action.Move, unit.movementLayoutType);
     }
 
     public void displayAttackOverlays(int xCoor, int yCoor, Unit unit){
         Debug.Log("Display Attack Overlays!");
-        displayOverlays(xCoor, yCoor, unit.minAttackRange, unit.maxAttackRange, Action.Attack, unit.attackLayoutType);
+        displayOverlays(xCoor, yCoor, unit.teamNumber, unit.minAttackRange, unit.maxAttackRange, Action.Attack, unit.attackLayoutType);
     }
 
     public void displayAttackRangeOverlays(int xCoor, int yCoor, Unit unit){
         Debug.Log("Display Attack Range Overlays!");
-        displayOverlays(xCoor, yCoor, unit.minAttackRange, unit.maxAttackRange + unit.moveDistance, Action.AttackRange, unit.attackLayoutType);
+        displayOverlays(xCoor, yCoor, unit.teamNumber, unit.minAttackRange, unit.maxAttackRange + unit.moveDistance, Action.AttackRange, unit.attackLayoutType);
     }
 
     //Recursive Base case 
-    private void displayOverlays(int xCoor, int yCoor, int minDistance, int maxDistance, Action action, Unit.UnitActionLayoutType actionLayoutType)
+    private void displayOverlays(int xCoor, int yCoor, int teamNumber, int minDistance, int maxDistance, Action action, Unit.UnitActionLayoutType actionLayoutType)
     {
         //right
-        displayAdjacentTileOverlays(xCoor + 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
+        displayAdjacentTileOverlays(xCoor + 1, yCoor, teamNumber, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
         //left
-        displayAdjacentTileOverlays(xCoor - 1, yCoor, minDistance,  maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
+        displayAdjacentTileOverlays(xCoor - 1, yCoor, teamNumber, minDistance,  maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
         //up
-        displayAdjacentTileOverlays(xCoor, yCoor + 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
+        displayAdjacentTileOverlays(xCoor, yCoor + 1, teamNumber, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
         //down
-        displayAdjacentTileOverlays(xCoor, yCoor - 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
+        displayAdjacentTileOverlays(xCoor, yCoor - 1, teamNumber, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
     }
 
     //Recursive Loop
-    private void displayAdjacentTileOverlays(int xCoor, int yCoor, int minDistance, int maxDistance, Action action, Unit.UnitActionLayoutType actionLayoutType, PreviousActionDirection prevActionDirection)
+    private void displayAdjacentTileOverlays(int xCoor, int yCoor, int teamNumber, int minDistance, int maxDistance, Action action, Unit.UnitActionLayoutType actionLayoutType, PreviousActionDirection prevActionDirection)
     {
         //Check that we havent reached the edge of the tilegrid and that there's distance remaining
         if (xCoor >= 0 && xCoor < tileMap.grid.GetLength(0) && yCoor >= 0 && yCoor < tileMap.grid.GetLength(1) && maxDistance > 0)
@@ -94,7 +94,10 @@ public class UnitMoveOverlayManager : MonoBehaviour {
                         if(action == Action.Move){
                             tile.enableMoveOverlay();
                         } else if(action == Action.Attack){
-                            tile.enableAttackOverlay();
+                            //Check if this tile's unit matches the one attacking
+                            if(!tile.hasAlliedUnit(teamNumber)){
+                                tile.enableAttackOverlay();
+                            }
                         } else if(action == Action.AttackRange){
                             tile.enableAttackRangeOverlay();
                         }
@@ -105,36 +108,36 @@ public class UnitMoveOverlayManager : MonoBehaviour {
                     if(actionLayoutType == Unit.UnitActionLayoutType.Any){
                         //right
                         if(prevActionDirection != PreviousActionDirection.Left){
-                            displayAdjacentTileOverlays(xCoor + 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
+                            displayAdjacentTileOverlays(xCoor + 1, yCoor, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
                         }
                         //left
                         if(prevActionDirection != PreviousActionDirection.Right){
-                            displayAdjacentTileOverlays(xCoor - 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
+                            displayAdjacentTileOverlays(xCoor - 1, yCoor, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
                         }
                         //up
                         if(prevActionDirection != PreviousActionDirection.Down){
-                            displayAdjacentTileOverlays(xCoor, yCoor + 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
+                            displayAdjacentTileOverlays(xCoor, yCoor + 1, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
                         }
                         //down
                         if(prevActionDirection != PreviousActionDirection.Up){
-                            displayAdjacentTileOverlays(xCoor, yCoor - 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
+                            displayAdjacentTileOverlays(xCoor, yCoor - 1, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
                         }
                     } else if(actionLayoutType == Unit.UnitActionLayoutType.Line){
                         //right
                         if(prevActionDirection == PreviousActionDirection.Right){
-                            displayAdjacentTileOverlays(xCoor + 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
+                            displayAdjacentTileOverlays(xCoor + 1, yCoor, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Right);
                         }
                         //left
                         if(prevActionDirection == PreviousActionDirection.Left){
-                            displayAdjacentTileOverlays(xCoor - 1, yCoor, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
+                            displayAdjacentTileOverlays(xCoor - 1, yCoor, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Left);
                         }
                         //up
                         if(prevActionDirection == PreviousActionDirection.Up){
-                            displayAdjacentTileOverlays(xCoor, yCoor + 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
+                            displayAdjacentTileOverlays(xCoor, yCoor + 1, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Up);
                         }
                         //down
                         if(prevActionDirection == PreviousActionDirection.Down){
-                            displayAdjacentTileOverlays(xCoor, yCoor - 1, minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
+                            displayAdjacentTileOverlays(xCoor, yCoor - 1, teamNumber,  minDistance, maxDistance, action, actionLayoutType, PreviousActionDirection.Down);
                         }
                     }
                 }

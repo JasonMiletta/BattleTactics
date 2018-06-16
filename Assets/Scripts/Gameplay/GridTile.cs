@@ -130,6 +130,16 @@ public class GridTile : MonoBehaviour {
         return GetComponentInChildren<Structure>();
     }
 
+    public bool hasAlliedUnit(int teamNumber){
+        Unit unit = getChildUnit();
+        if(unit != null){
+            if(unit.teamNumber == teamNumber){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private IEnumerator lerpObjToScale(GameObject obj, Vector3 targetScale, float duration)
     {
         tileIsChanging = true;
